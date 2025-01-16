@@ -1,0 +1,2795 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pandas Part I &#8212; DATA_ENG 200 Foundations of Data Science</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/02-data-manipulation';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Reference" href="../99-reference.html" />
+    <link rel="prev" title="Case Study: Hospital readmissions" href="01b-data-cycle-case-study.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../00-syllabus.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">DATA_ENG 200 Foundations of Data Science</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../00-syllabus.html">
+                    DATA_ENG 200: Foundations of Data Science
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Week 1 entry lecture</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01a-entry-activity.html">Entry survey</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Case study on readmissions</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01b-data-cycle-case-study.html">Case Study: Hospital readmissions</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Data manipulation with pandas</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">pandas</span></code> Part I</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Bibliography</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../99-reference.html">Reference</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/mosesyhc/de200-2025wn/blob/master/lectures/02-data-manipulation.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/02-data-manipulation.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>pandas Part I</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-building-blocks">Basic building blocks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataframe-sources">DataFrame sources</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reading-from-a-file">Reading from a file</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api-requests-more-details-later">API requests (more details later)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-inspection">Basic inspection</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-type-of-data-are-available-in-the-dataframe-are-there-missing-data">What type of data are available in the dataframe? Are there missing data?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-much-data-are-available">How much data are available?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subsetting-and-indexing">Subsetting and indexing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calling-a-column-by-attributes-if-valid">Calling a column by attributes (if valid)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calling-a-column-by-keys">Calling a column by keys</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-columns-by-name">Multiple columns by name</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-rows">Selecting rows</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#indexing-with-loc-iloc">Indexing with <code class="docutils literal notranslate"><span class="pre">.loc[]</span></code>, <code class="docutils literal notranslate"><span class="pre">iloc[]</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#filtering-or-subsetting-by-condition">Filtering or subsetting by condition</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculating-summary-statistics">Calculating summary statistics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-many-of-the-meteorites-were-observed-falling-vs-found">How many of the meteorites were observed falling vs found?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behavior-of-mass-of-a-meterorite">Behavior of mass of a meterorite?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-many-unique-classes-are-in-this-dataset">How many unique classes are in this dataset?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#general-statistics">General statistics</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practice-yellow-cab-data">Practice: Yellow cab data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-cleaning">Data cleaning</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dropping-columns">Dropping columns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#renaming-columns">Renaming columns</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examine-the-correct-data-types-type-conversion">Examine the correct data types (type conversion)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dropping-rows-with-na-values">Dropping rows with NA values</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-new-columns">Creating new columns</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sorting-by-values">Sorting by values</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-index">Working with index</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-index">Setting index</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sorting-by-index">Sorting by index</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-by-index">Selecting by index</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resetting-index">Resetting index</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practice-meteorite-indexing">Practice: Meteorite indexing</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="pandas-part-i">
+<h1><code class="docutils literal notranslate"><span class="pre">pandas</span></code> Part I<a class="headerlink" href="#pandas-part-i" title="Link to this heading">#</a></h1>
+<p>This document includes a sequence of notebooks to introduce data manipulation in Python using the <code class="docutils literal notranslate"><span class="pre">pandas</span></code> library.</p>
+<section id="basic-building-blocks">
+<h2>Basic building blocks<a class="headerlink" href="#basic-building-blocks" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">pandas</span></code> works with tabular data (rows and columns) through <code class="docutils literal notranslate"><span class="pre">Series</span></code>, <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> objects.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">meteor</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/Meteorite_Landings.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><em>Source: <a class="reference external" href="https://data.nasa.gov/Space-Science/Meteorite-Landings/gh4g-9sfh/data_preview">NASA Open Data Portal</a></em></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">meteor</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>A <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> is the basic “spreadsheet” or “table” used in Python.  A <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> object is composed of one or more <code class="docutils literal notranslate"><span class="pre">Series</span></code> objects (columns), and indexed by <code class="docutils literal notranslate"><span class="pre">Index</span></code> (rows).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># head.() shows us the first several rows</span>
+<span class="n">meteor</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># investigate a column (note its type)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">meteor</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+<span class="n">meteor</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># investigate how the columns are labeled</span>
+<span class="n">meteor</span><span class="o">.</span><span class="n">columns</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># investigate how the rows are indexed</span>
+<span class="n">meteor</span><span class="o">.</span><span class="n">index</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="dataframe-sources">
+<h2>DataFrame sources<a class="headerlink" href="#dataframe-sources" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">DataFrame</span></code>s can be created from reading a file, scraping the web, and/or API requests.</p>
+<section id="reading-from-a-file">
+<h3>Reading from a file<a class="headerlink" href="#reading-from-a-file" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">meteor</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/Meteorite_Landings.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="api-requests-more-details-later">
+<h3>API requests (more details later)<a class="headerlink" href="#api-requests-more-details-later" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+    <span class="s1">&#39;https://data.nasa.gov/resource/gh4g-9sfh.json&#39;</span><span class="p">,</span>
+    <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;$limit&#39;</span><span class="p">:</span> <span class="mi">50000</span><span class="p">}</span>  <span class="c1"># Depending on the API, there may be a default limit of records one can obtain</span>
+<span class="p">)</span>  
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">response</span>  <span class="c1"># A 200 exit code indicates success</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Response [200]&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p><em>Tip:</em> A list of HTTP GET exit codes is available at <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status">https://developer.mozilla.org/en-US/docs/Web/HTTP/Status</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">response</span><span class="o">.</span><span class="n">ok</span>  <span class="c1"># checks ok flag</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Extract data if request is successful</span>
+<span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">ok</span><span class="p">:</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Request failed with exit code </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load into DataFrame</span>
+<span class="n">meteor_json</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<span class="n">meteor_json</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>id</th>
+      <th>nametype</th>
+      <th>recclass</th>
+      <th>mass</th>
+      <th>fall</th>
+      <th>year</th>
+      <th>reclat</th>
+      <th>reclong</th>
+      <th>geolocation</th>
+      <th>:@computed_region_cbhk_fwbd</th>
+      <th>:@computed_region_nnqa_25f4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Aachen</td>
+      <td>1</td>
+      <td>Valid</td>
+      <td>L5</td>
+      <td>21</td>
+      <td>Fell</td>
+      <td>1880-01-01T00:00:00.000</td>
+      <td>50.775000</td>
+      <td>6.083330</td>
+      <td>{'latitude': '50.775', 'longitude': '6.08333'}</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Aarhus</td>
+      <td>2</td>
+      <td>Valid</td>
+      <td>H6</td>
+      <td>720</td>
+      <td>Fell</td>
+      <td>1951-01-01T00:00:00.000</td>
+      <td>56.183330</td>
+      <td>10.233330</td>
+      <td>{'latitude': '56.18333', 'longitude': '10.23333'}</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Abee</td>
+      <td>6</td>
+      <td>Valid</td>
+      <td>EH4</td>
+      <td>107000</td>
+      <td>Fell</td>
+      <td>1952-01-01T00:00:00.000</td>
+      <td>54.216670</td>
+      <td>-113.000000</td>
+      <td>{'latitude': '54.21667', 'longitude': '-113.0'}</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Acapulco</td>
+      <td>10</td>
+      <td>Valid</td>
+      <td>Acapulcoite</td>
+      <td>1914</td>
+      <td>Fell</td>
+      <td>1976-01-01T00:00:00.000</td>
+      <td>16.883330</td>
+      <td>-99.900000</td>
+      <td>{'latitude': '16.88333', 'longitude': '-99.9'}</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Achiras</td>
+      <td>370</td>
+      <td>Valid</td>
+      <td>L6</td>
+      <td>780</td>
+      <td>Fell</td>
+      <td>1902-01-01T00:00:00.000</td>
+      <td>-33.166670</td>
+      <td>-64.950000</td>
+      <td>{'latitude': '-33.16667', 'longitude': '-64.95'}</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Removing auto-computed columns</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">meteor_json</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;@computed_region&#39;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">columns_to_drop</span> <span class="o">=</span> <span class="n">meteor_json</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meteor_json</span> <span class="o">=</span> <span class="n">meteor_json</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns_to_drop</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># storing downloaded data into files</span>
+<span class="c1"># meteor_json.to_csv(&#39;meteor.csv&#39;)  </span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="basic-inspection">
+<h2>Basic inspection<a class="headerlink" href="#basic-inspection" title="Link to this heading">#</a></h2>
+<section id="what-type-of-data-are-available-in-the-dataframe-are-there-missing-data">
+<h3>What type of data are available in the dataframe? Are there missing data?<a class="headerlink" href="#what-type-of-data-are-available-in-the-dataframe-are-there-missing-data" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meteor</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="how-much-data-are-available">
+<h3>How much data are available?<a class="headerlink" href="#how-much-data-are-available" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meteor</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="subsetting-and-indexing">
+<h2>Subsetting and indexing<a class="headerlink" href="#subsetting-and-indexing" title="Link to this heading">#</a></h2>
+<p>Effectively extracting data from a full dataset requires fluency in how the <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> can be subsetted and how it is indexed.</p>
+<section id="calling-a-column-by-attributes-if-valid">
+<h3>Calling a column by attributes (if valid)<a class="headerlink" href="#calling-a-column-by-attributes-if-valid" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meteor</span><span class="o">.</span><span class="n">recclass</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="calling-a-column-by-keys">
+<h3>Calling a column by keys<a class="headerlink" href="#calling-a-column-by-keys" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meteor</span><span class="p">[</span><span class="s1">&#39;mass (g)&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="multiple-columns-by-name">
+<h3>Multiple columns by name<a class="headerlink" href="#multiple-columns-by-name" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meteor</span><span class="p">[[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;mass (g)&#39;</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>mass (g)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Aachen</td>
+      <td>21.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Aarhus</td>
+      <td>720.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Abee</td>
+      <td>107000.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Acapulco</td>
+      <td>1914.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Achiras</td>
+      <td>780.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>45711</th>
+      <td>Zillah 002</td>
+      <td>172.0</td>
+    </tr>
+    <tr>
+      <th>45712</th>
+      <td>Zinder</td>
+      <td>46.0</td>
+    </tr>
+    <tr>
+      <th>45713</th>
+      <td>Zlin</td>
+      <td>3.3</td>
+    </tr>
+    <tr>
+      <th>45714</th>
+      <td>Zubkovsky</td>
+      <td>2167.0</td>
+    </tr>
+    <tr>
+      <th>45715</th>
+      <td>Zulu Queen</td>
+      <td>200.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>45716 rows × 2 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="selecting-rows">
+<h3>Selecting rows<a class="headerlink" href="#selecting-rows" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meteor</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>  <span class="c1"># end-exclusive</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>id</th>
+      <th>nametype</th>
+      <th>recclass</th>
+      <th>mass (g)</th>
+      <th>fall</th>
+      <th>year</th>
+      <th>reclat</th>
+      <th>reclong</th>
+      <th>GeoLocation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5</th>
+      <td>Adhi Kot</td>
+      <td>379</td>
+      <td>Valid</td>
+      <td>EH4</td>
+      <td>4239.0</td>
+      <td>Fell</td>
+      <td>1919.0</td>
+      <td>32.10000</td>
+      <td>71.80000</td>
+      <td>(32.1, 71.8)</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Adzhi-Bogdo (stone)</td>
+      <td>390</td>
+      <td>Valid</td>
+      <td>LL3-6</td>
+      <td>910.0</td>
+      <td>Fell</td>
+      <td>1949.0</td>
+      <td>44.83333</td>
+      <td>95.16667</td>
+      <td>(44.83333, 95.16667)</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Agen</td>
+      <td>392</td>
+      <td>Valid</td>
+      <td>H5</td>
+      <td>30000.0</td>
+      <td>Fell</td>
+      <td>1814.0</td>
+      <td>44.21667</td>
+      <td>0.61667</td>
+      <td>(44.21667, 0.61667)</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Aguada</td>
+      <td>398</td>
+      <td>Valid</td>
+      <td>L6</td>
+      <td>1620.0</td>
+      <td>Fell</td>
+      <td>1930.0</td>
+      <td>-31.60000</td>
+      <td>-65.23333</td>
+      <td>(-31.6, -65.23333)</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Aguila Blanca</td>
+      <td>417</td>
+      <td>Valid</td>
+      <td>L</td>
+      <td>1440.0</td>
+      <td>Fell</td>
+      <td>1920.0</td>
+      <td>-30.86667</td>
+      <td>-64.55000</td>
+      <td>(-30.86667, -64.55)</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="indexing-with-loc-iloc">
+<h3>Indexing with <code class="docutils literal notranslate"><span class="pre">.loc[]</span></code>, <code class="docutils literal notranslate"><span class="pre">iloc[]</span></code><a class="headerlink" href="#indexing-with-loc-iloc" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">.loc[]</span></code> indexes by row labels</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.iloc[]</span></code> indexes by indices</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meteor</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;mass (g)&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>id</th>
+      <th>nametype</th>
+      <th>recclass</th>
+      <th>mass (g)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Aachen</td>
+      <td>1</td>
+      <td>Valid</td>
+      <td>L5</td>
+      <td>21.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Aarhus</td>
+      <td>2</td>
+      <td>Valid</td>
+      <td>H6</td>
+      <td>720.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Abee</td>
+      <td>6</td>
+      <td>Valid</td>
+      <td>EH4</td>
+      <td>107000.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Acapulco</td>
+      <td>10</td>
+      <td>Valid</td>
+      <td>Acapulcoite</td>
+      <td>1914.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Achiras</td>
+      <td>370</td>
+      <td>Valid</td>
+      <td>L6</td>
+      <td>780.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meteor</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>id</th>
+      <th>nametype</th>
+      <th>recclass</th>
+      <th>mass (g)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Aachen</td>
+      <td>1</td>
+      <td>Valid</td>
+      <td>L5</td>
+      <td>21.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Aarhus</td>
+      <td>2</td>
+      <td>Valid</td>
+      <td>H6</td>
+      <td>720.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Abee</td>
+      <td>6</td>
+      <td>Valid</td>
+      <td>EH4</td>
+      <td>107000.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Acapulco</td>
+      <td>10</td>
+      <td>Valid</td>
+      <td>Acapulcoite</td>
+      <td>1914.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="filtering-or-subsetting-by-condition">
+<h3>Filtering or subsetting by condition<a class="headerlink" href="#filtering-or-subsetting-by-condition" title="Link to this heading">#</a></h3>
+<p>Selection by condition can be performed by creating a Boolean <em>mask</em> with True/False values to specify which rows/columns to select.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># select records with heavy meteor (mass &gt; 10^7) that are found (fall = &#39;Found&#39;)</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">meteor</span><span class="p">[</span><span class="s1">&#39;mass (g)&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">1e7</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">meteor</span><span class="o">.</span><span class="n">fall</span> <span class="o">==</span> <span class="s1">&#39;Found&#39;</span><span class="p">)</span>
+<span class="n">mask</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0        False
+1        False
+2        False
+3        False
+4        False
+         ...  
+45711    False
+45712    False
+45713    False
+45714    False
+45715    False
+Length: 45716, dtype: bool
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Note:</strong> Each condition is surrounded by parentheses, and we use bitwise operator (<code class="docutils literal notranslate"><span class="pre">&amp;</span></code>, <code class="docutils literal notranslate"><span class="pre">|</span></code>, <code class="docutils literal notranslate"><span class="pre">~</span></code>) instead of logical operators (<code class="docutils literal notranslate"><span class="pre">and</span></code>, <code class="docutils literal notranslate"><span class="pre">or</span></code>, <code class="docutils literal notranslate"><span class="pre">not</span></code>).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meteor</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>id</th>
+      <th>nametype</th>
+      <th>recclass</th>
+      <th>mass (g)</th>
+      <th>fall</th>
+      <th>year</th>
+      <th>reclat</th>
+      <th>reclong</th>
+      <th>GeoLocation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3455</th>
+      <td>Armanty</td>
+      <td>2335</td>
+      <td>Valid</td>
+      <td>Iron, IIIE</td>
+      <td>28000000.0</td>
+      <td>Found</td>
+      <td>1898.0</td>
+      <td>47.00000</td>
+      <td>88.00000</td>
+      <td>(47.0, 88.0)</td>
+    </tr>
+    <tr>
+      <th>5016</th>
+      <td>Bacubirito</td>
+      <td>4919</td>
+      <td>Valid</td>
+      <td>Iron, ungrouped</td>
+      <td>22000000.0</td>
+      <td>Found</td>
+      <td>1863.0</td>
+      <td>26.20000</td>
+      <td>-107.83333</td>
+      <td>(26.2, -107.83333)</td>
+    </tr>
+    <tr>
+      <th>5365</th>
+      <td>Campo del Cielo</td>
+      <td>5247</td>
+      <td>Valid</td>
+      <td>Iron, IAB-MG</td>
+      <td>50000000.0</td>
+      <td>Found</td>
+      <td>1575.0</td>
+      <td>-27.46667</td>
+      <td>-60.58333</td>
+      <td>(-27.46667, -60.58333)</td>
+    </tr>
+    <tr>
+      <th>5370</th>
+      <td>Canyon Diablo</td>
+      <td>5257</td>
+      <td>Valid</td>
+      <td>Iron, IAB-MG</td>
+      <td>30000000.0</td>
+      <td>Found</td>
+      <td>1891.0</td>
+      <td>35.05000</td>
+      <td>-111.03333</td>
+      <td>(35.05, -111.03333)</td>
+    </tr>
+    <tr>
+      <th>5373</th>
+      <td>Cape York</td>
+      <td>5262</td>
+      <td>Valid</td>
+      <td>Iron, IIIAB</td>
+      <td>58200000.0</td>
+      <td>Found</td>
+      <td>1818.0</td>
+      <td>76.13333</td>
+      <td>-64.93333</td>
+      <td>(76.13333, -64.93333)</td>
+    </tr>
+    <tr>
+      <th>5468</th>
+      <td>Chupaderos</td>
+      <td>5363</td>
+      <td>Valid</td>
+      <td>Iron, IIIAB</td>
+      <td>24300000.0</td>
+      <td>Found</td>
+      <td>1852.0</td>
+      <td>27.00000</td>
+      <td>-105.10000</td>
+      <td>(27.0, -105.1)</td>
+    </tr>
+    <tr>
+      <th>12613</th>
+      <td>Gibeon</td>
+      <td>10912</td>
+      <td>Valid</td>
+      <td>Iron, IVA</td>
+      <td>26000000.0</td>
+      <td>Found</td>
+      <td>1836.0</td>
+      <td>-25.50000</td>
+      <td>18.00000</td>
+      <td>(-25.5, 18.0)</td>
+    </tr>
+    <tr>
+      <th>16392</th>
+      <td>Hoba</td>
+      <td>11890</td>
+      <td>Valid</td>
+      <td>Iron, IVB</td>
+      <td>60000000.0</td>
+      <td>Found</td>
+      <td>1920.0</td>
+      <td>-19.58333</td>
+      <td>17.91667</td>
+      <td>(-19.58333, 17.91667)</td>
+    </tr>
+    <tr>
+      <th>22921</th>
+      <td>Mbosi</td>
+      <td>15456</td>
+      <td>Valid</td>
+      <td>Iron, ungrouped</td>
+      <td>16000000.0</td>
+      <td>Found</td>
+      <td>1930.0</td>
+      <td>-9.11667</td>
+      <td>33.06667</td>
+      <td>(-9.11667, 33.06667)</td>
+    </tr>
+    <tr>
+      <th>26174</th>
+      <td>Morito</td>
+      <td>16745</td>
+      <td>Valid</td>
+      <td>Iron, IIIAB</td>
+      <td>10100000.0</td>
+      <td>Found</td>
+      <td>1600.0</td>
+      <td>27.05000</td>
+      <td>-105.43333</td>
+      <td>(27.05, -105.43333)</td>
+    </tr>
+    <tr>
+      <th>26297</th>
+      <td>Mundrabilla</td>
+      <td>16852</td>
+      <td>Valid</td>
+      <td>Iron, IAB-ung</td>
+      <td>24000000.0</td>
+      <td>Found</td>
+      <td>1911.0</td>
+      <td>-30.78333</td>
+      <td>127.55000</td>
+      <td>(-30.78333, 127.55)</td>
+    </tr>
+    <tr>
+      <th>38317</th>
+      <td>Willamette</td>
+      <td>24269</td>
+      <td>Valid</td>
+      <td>Iron, IIIAB</td>
+      <td>15500000.0</td>
+      <td>Found</td>
+      <td>1902.0</td>
+      <td>45.36667</td>
+      <td>-122.58333</td>
+      <td>(45.36667, -122.58333)</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># negation of a mask</span>
+<span class="n">meteor</span><span class="p">[</span><span class="o">~</span><span class="n">mask</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Note</strong>: Boolean masks can be used with <code class="docutils literal notranslate"><span class="pre">loc[]</span></code> and <code class="docutils literal notranslate"><span class="pre">iloc[]</span></code> as well.</p>
+</section>
+</section>
+<section id="calculating-summary-statistics">
+<h2>Calculating summary statistics<a class="headerlink" href="#calculating-summary-statistics" title="Link to this heading">#</a></h2>
+<p>This section discusses preliminary calculations before conducting further data analysis.</p>
+<section id="how-many-of-the-meteorites-were-observed-falling-vs-found">
+<h3>How many of the meteorites were observed falling vs found?<a class="headerlink" href="#how-many-of-the-meteorites-were-observed-falling-vs-found" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meteor</span><span class="o">.</span><span class="n">fall</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fall
+Found    44609
+Fell      1107
+Name: count, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meteor</span><span class="o">.</span><span class="n">fall</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fall
+Found    0.975785
+Fell     0.024215
+Name: proportion, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="behavior-of-mass-of-a-meterorite">
+<h3>Behavior of mass of a meterorite?<a class="headerlink" href="#behavior-of-mass-of-a-meterorite" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meteor</span><span class="p">[</span><span class="s1">&#39;mass (g)&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meteor</span><span class="p">[</span><span class="s1">&#39;mass (g)&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">([</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meteor</span><span class="p">[</span><span class="s1">&#39;mass (g)&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sometimes helpful to locate the other information related to a particular entry</span>
+<span class="n">meteor</span><span class="p">[</span><span class="s1">&#39;mass (g)&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()</span>
+<span class="n">meteor</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">meteor</span><span class="p">[</span><span class="s1">&#39;mass (g)&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()]</span>  <span class="c1"># note the &quot;index&quot; of max()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>name                            Hoba
+id                             11890
+nametype                       Valid
+recclass                   Iron, IVB
+mass (g)                  60000000.0
+fall                           Found
+year                          1920.0
+reclat                     -19.58333
+reclong                     17.91667
+GeoLocation    (-19.58333, 17.91667)
+Name: 16392, dtype: object
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="how-many-unique-classes-are-in-this-dataset">
+<h3>How many unique classes are in this dataset?<a class="headerlink" href="#how-many-unique-classes-are-in-this-dataset" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meteor</span><span class="o">.</span><span class="n">recclass</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([&#39;L5&#39;, &#39;H6&#39;, &#39;EH4&#39;, &#39;Acapulcoite&#39;, &#39;L6&#39;, &#39;LL3-6&#39;, &#39;H5&#39;, &#39;L&#39;,
+       &#39;Diogenite-pm&#39;, &#39;Unknown&#39;, &#39;H4&#39;, &#39;H&#39;, &#39;Iron, IVA&#39;, &#39;CR2-an&#39;, &#39;LL5&#39;,
+       &#39;CI1&#39;, &#39;L/LL4&#39;, &#39;Eucrite-mmict&#39;, &#39;CV3&#39;, &#39;Ureilite-an&#39;,
+       &#39;Stone-uncl&#39;, &#39;L3&#39;, &#39;Angrite&#39;, &#39;LL6&#39;, &#39;L4&#39;, &#39;Aubrite&#39;,
+       &#39;Iron, IIAB&#39;, &#39;Iron, IAB-sLL&#39;, &#39;Iron, ungrouped&#39;, &#39;CM2&#39;, &#39;OC&#39;,
+       &#39;Mesosiderite-A1&#39;, &#39;LL4&#39;, &#39;C2-ung&#39;, &#39;LL3.8&#39;, &#39;Howardite&#39;,
+       &#39;Eucrite-pmict&#39;, &#39;Diogenite&#39;, &#39;LL3.15&#39;, &#39;LL3.9&#39;, &#39;Iron, IAB-MG&#39;,
+       &#39;H/L3.9&#39;, &#39;Iron?&#39;, &#39;Eucrite&#39;, &#39;H4-an&#39;, &#39;L/LL6&#39;, &#39;Iron, IIIAB&#39;,
+       &#39;H/L4&#39;, &#39;H4-5&#39;, &#39;L3.7&#39;, &#39;LL3.4&#39;, &#39;Martian (chassignite)&#39;, &#39;EL6&#39;,
+       &#39;H3.8&#39;, &#39;H3-5&#39;, &#39;H5-6&#39;, &#39;Mesosiderite&#39;, &#39;H5-7&#39;, &#39;L3-6&#39;, &#39;H4-6&#39;,
+       &#39;Ureilite&#39;, &#39;Iron, IID&#39;, &#39;Mesosiderite-A3/4&#39;, &#39;CO3.3&#39;, &#39;H3&#39;,
+       &#39;EH3/4-an&#39;, &#39;Iron, IIE&#39;, &#39;L/LL5&#39;, &#39;H3.7&#39;, &#39;CBa&#39;, &#39;H4/5&#39;, &#39;H3/4&#39;,
+       &#39;H?&#39;, &#39;H3-6&#39;, &#39;L3.4&#39;, &#39;Iron, IAB-sHL&#39;, &#39;L3.7-6&#39;, &#39;EH7-an&#39;, &#39;Iron&#39;,
+       &#39;CR2&#39;, &#39;CO3.2&#39;, &#39;K3&#39;, &#39;L5/6&#39;, &#39;CK4&#39;, &#39;Iron, IIE-an&#39;, &#39;L3.6&#39;,
+       &#39;LL3.2&#39;, &#39;Pallasite&#39;, &#39;CO3.5&#39;, &#39;Lodranite&#39;, &#39;Mesosiderite-A3&#39;,
+       &#39;L3-4&#39;, &#39;H5/6&#39;, &#39;Pallasite, PMG&#39;, &#39;Eucrite-cm&#39;, &#39;L5-6&#39;, &#39;CO3.6&#39;,
+       &#39;Martian (nakhlite)&#39;, &#39;LL3.6&#39;, &#39;C3-ung&#39;, &#39;H3-4&#39;, &#39;CO3.4&#39;, &#39;EH3&#39;,
+       &#39;Iron, IAB-ung&#39;, &#39;Winonaite&#39;, &#39;LL&#39;, &#39;Eucrite-br&#39;, &#39;Iron, IIF&#39;,
+       &#39;R3.8-6&#39;, &#39;L4-6&#39;, &#39;EH5&#39;, &#39;LL3.00&#39;, &#39;H3.4&#39;, &#39;Martian (shergottite)&#39;,
+       &#39;Achondrite-ung&#39;, &#39;LL3.3&#39;, &#39;C&#39;, &#39;H/L3.6&#39;, &#39;Iron, IIIAB-an&#39;, &#39;LL7&#39;,
+       &#39;Mesosiderite-B2&#39;, &#39;LL4-6&#39;, &#39;CO3.7&#39;, &#39;L/LL6-an&#39;,
+       &#39;Iron, IAB complex&#39;, &#39;Pallasite, PMG-an&#39;, &#39;H3.9/4&#39;, &#39;L3.8&#39;,
+       &#39;LL5-6&#39;, &#39;LL3.8-6&#39;, &#39;L3.9&#39;, &#39;L4-5&#39;, &#39;L3-5&#39;, &#39;LL4/5&#39;, &#39;L4/5&#39;,
+       &#39;H3.9&#39;, &#39;H3.6-6&#39;, &#39;H3.8-5&#39;, &#39;H3.8/4&#39;, &#39;H3.9-5&#39;, &#39;CH3&#39;, &#39;R3.8-5&#39;,
+       &#39;L3.9/4&#39;, &#39;E4&#39;, &#39;CO3&#39;, &#39;Chondrite-ung&#39;, &#39;H~5&#39;, &#39;H~6&#39;, &#39;L/LL3.10&#39;,
+       &#39;EL5&#39;, &#39;LL3&#39;, &#39;L~6&#39;, &#39;L~3&#39;, &#39;H~4&#39;, &#39;L(LL)3.5-3.7&#39;, &#39;Iron, IIIE-an&#39;,
+       &#39;H3.6&#39;, &#39;L3.4-3.7&#39;, &#39;L3.5&#39;, &#39;CM1/2&#39;, &#39;Martian (OPX)&#39;, &#39;Brachinite&#39;,
+       &#39;LL7(?)&#39;, &#39;LL6(?)&#39;, &#39;Eucrite-Mg rich&#39;, &#39;H3.5-4&#39;, &#39;EL3&#39;, &#39;R3.6&#39;,
+       &#39;H3.5&#39;, &#39;CM1&#39;, &#39;L/LL3&#39;, &#39;H7&#39;, &#39;L(?)3&#39;, &#39;L3.2&#39;, &#39;L3.7-3.9&#39;,
+       &#39;Mesosiderite-B1&#39;, &#39;Eucrite-unbr&#39;, &#39;LL3.7&#39;, &#39;CO3.0&#39;, &#39;LL3.5&#39;,
+       &#39;L3.7-4&#39;, &#39;CV3-an&#39;, &#39;Lunar (anorth)&#39;, &#39;L3.3&#39;, &#39;Iron, IAB-sLM&#39;,
+       &#39;Lunar&#39;, &#39;Iron, IC&#39;, &#39;Iron, IID-an&#39;, &#39;Iron, IIIE&#39;, &#39;Iron, IVA-an&#39;,
+       &#39;CK6&#39;, &#39;L3.1&#39;, &#39;CK5&#39;, &#39;H3.3&#39;, &#39;H3.7-6&#39;, &#39;E6&#39;, &#39;H3.0&#39;, &#39;H3.1&#39;,
+       &#39;L3.0&#39;, &#39;L/LL3.4&#39;, &#39;C6&#39;, &#39;LL3.0&#39;, &#39;Lunar (gabbro)&#39;, &#39;R4&#39;, &#39;C4&#39;,
+       &#39;Iron, IIG&#39;, &#39;Iron, IIC&#39;, &#39;C1-ung&#39;, &#39;H5-an&#39;, &#39;EH4/5&#39;, &#39;Iron, IIIF&#39;,
+       &#39;R3-6&#39;, &#39;Mesosiderite-B4&#39;, &#39;L6/7&#39;, &#39;Relict H&#39;, &#39;L-imp melt&#39;, &#39;CK3&#39;,
+       &#39;H3-an&#39;, &#39;Iron, IVB&#39;, &#39;R3.8&#39;, &#39;L~5&#39;, &#39;Mesosiderite-an&#39;,
+       &#39;Mesosiderite-A2&#39;, &#39;Pallasite, PES&#39;, &#39;C4-ung&#39;, &#39;Iron, IAB?&#39;,
+       &#39;Mesosiderite-A&#39;, &#39;R3.5-6&#39;, &#39;H3.9-6&#39;, &#39;Ureilite-pmict&#39;, &#39;LL~6&#39;,
+       &#39;CK4/5&#39;, &#39;EL4&#39;, &#39;Lunar (feldsp. breccia)&#39;, &#39;L3.9-6&#39;, &#39;H-an&#39;,
+       &#39;L/LL3-6&#39;, &#39;L/LL3-5&#39;, &#39;H/L3.5&#39;, &#39;H/L3&#39;, &#39;R3-4&#39;, &#39;CK3-an&#39;, &#39;LL4-5&#39;,
+       &#39;H/L6&#39;, &#39;L3/4&#39;, &#39;H-imp melt&#39;, &#39;CR&#39;, &#39;Chondrite-fusion crust&#39;,
+       &#39;Iron, IAB-sLH&#39;, &#39;H(L)3-an&#39;, &#39;L(LL)3&#39;, &#39;H(L)3&#39;, &#39;R3&#39;, &#39;L7&#39;,
+       &#39;CM-an&#39;, &#39;L/LL~6&#39;, &#39;L/LL~5&#39;, &#39;L~4&#39;, &#39;L/LL~4&#39;, &#39;LL(L)3&#39;, &#39;H3.2&#39;,
+       &#39;L-melt breccia&#39;, &#39;H6-melt breccia&#39;, &#39;H5-melt breccia&#39;,
+       &#39;H-melt rock&#39;, &#39;Eucrite-an&#39;, &#39;Lunar (bas/anor)&#39;, &#39;LL5/6&#39;, &#39;LL3/4&#39;,
+       &#39;H3.4/3.5&#39;, &#39;Lunar (basalt)&#39;, &#39;H/L5&#39;, &#39;H(5?)&#39;, &#39;LL-imp melt&#39;,
+       &#39;Mesosiderite?&#39;, &#39;H~4/5&#39;, &#39;L6-melt breccia&#39;, &#39;L3.5-3.7&#39;,
+       &#39;Iron, IIAB-an&#39;, &#39;L3.3-3.7&#39;, &#39;L3.2-3.6&#39;, &#39;L3.3-3.6&#39;,
+       &#39;Acapulcoite/Lodranite&#39;, &#39;Mesosiderite-B&#39;, &#39;CK5/6&#39;, &#39;L3.05&#39;, &#39;C2&#39;,
+       &#39;C4/5&#39;, &#39;L/LL3.2&#39;, &#39;Iron, IIIAB?&#39;, &#39;L3.5-5&#39;, &#39;L/LL(?)3&#39;, &#39;H4(?)&#39;,
+       &#39;Iron, IAB-sHH&#39;, &#39;Relict iron&#39;, &#39;EL4/5&#39;, &#39;L5-7&#39;, &#39;Diogenite-an&#39;,
+       &#39;L-melt rock&#39;, &#39;CR1&#39;, &#39;H5 &#39;, &#39;L5 &#39;, &#39;H4 &#39;, &#39;L4 &#39;, &#39;E&#39;, &#39;L6 &#39;,
+       &#39;H3 &#39;, &#39;LL6 &#39;, &#39;H-metal&#39;, &#39;H6 &#39;, &#39;L-metal&#39;, &#39;Relict OC&#39;, &#39;EH&#39;,
+       &#39;Mesosiderite-A4&#39;, &#39;L/LL5/6&#39;, &#39;H3.8-4&#39;, &#39;CBb&#39;, &#39;EL6/7&#39;, &#39;EL7&#39;,
+       &#39;CH/CBb&#39;, &#39;CO3.8&#39;, &#39;H/L~4&#39;, &#39;Mesosiderite-C2&#39;, &#39;R5&#39;, &#39;H4/6&#39;,
+       &#39;H3.7-5&#39;, &#39;LL3.7-6&#39;, &#39;H3.7/3.8&#39;, &#39;L3.7/3.8&#39;, &#39;EH-imp melt&#39;, &#39;R&#39;,
+       &#39;Fusion crust&#39;, &#39;Aubrite-an&#39;, &#39;R6&#39;, &#39;LL-melt rock&#39;, &#39;L3.5-3.9&#39;,
+       &#39;L3.2-3.5&#39;, &#39;L3.3-3.5&#39;, &#39;L3.0-3.7&#39;, &#39;E3-an&#39;, &#39;K&#39;, &#39;E3&#39;,
+       &#39;Acapulcoite/lodranite&#39;, &#39;CK4-an&#39;, &#39;L(LL)3.05&#39;, &#39;L3.10&#39;, &#39;CB&#39;,
+       &#39;Diogenite-olivine&#39;, &#39;EL-melt rock&#39;, &#39;EH6&#39;, &#39;Pallasite, ungrouped&#39;,
+       &#39;L/LL4/5&#39;, &#39;L3.8-an&#39;, &#39;Iron, IAB-an&#39;, &#39;C5/6-ung&#39;, &#39;CV2&#39;,
+       &#39;Iron, IC-an&#39;, &#39;Lunar (bas. breccia)&#39;, &#39;L3.8-6&#39;, &#39;R3/4&#39;, &#39;R3.9&#39;,
+       &#39;CK&#39;, &#39;LL3.10&#39;, &#39;R4/5&#39;, &#39;L3.8-5&#39;, &#39;Mesosiderite-C&#39;, &#39;Enst achon&#39;,
+       &#39;H/L3-4&#39;, &#39;L(H)3&#39;, &#39;LL6/7&#39;, &#39;LL3.1&#39;, &#39;OC3&#39;, &#39;R3.7&#39;, &#39;CO3 &#39;, &#39;CH3 &#39;,
+       &#39;LL~4&#39;, &#39;LL~4/5&#39;, &#39;L(LL)~4&#39;, &#39;H3.05&#39;, &#39;H3.10&#39;,
+       &#39;Impact melt breccia&#39;, &#39;LL3-5&#39;, &#39;H/L3.7&#39;, &#39;LL3-4&#39;, &#39;CK3/4&#39;,
+       &#39;Martian&#39;, &#39;CO3.1&#39;, &#39;Lunar (bas/gab brec)&#39;, &#39;Achondrite-prim&#39;,
+       &#39;LL&lt;3.5&#39;, &#39;CK3.8&#39;, &#39;L/LL-melt rock&#39;, &#39;H6/7&#39;, &#39;EL6 &#39;,
+       &#39;Iron, IAB-sHL-an&#39;, &#39;CM2-an&#39;, &#39;R3-5&#39;, &#39;L4-melt rock&#39;,
+       &#39;L6-melt rock&#39;, &#39;H/L4/5&#39;, &#39;EL3/4&#39;, &#39;H/L6-melt rock&#39;,
+       &#39;Enst achon-ung&#39;, &#39;L3-7&#39;, &#39;R3.4&#39;, &#39;LL3.05&#39;, &#39;LL4/6&#39;, &#39;LL3.8-4&#39;,
+       &#39;H3.15&#39;, &#39;C3.0-ung&#39;, &#39;LL-melt breccia&#39;, &#39;LL6-melt breccia&#39;,
+       &#39;L5-melt breccia&#39;, &#39;LL(L)3.1&#39;, &#39;LL6-an&#39;, &#39;L4-melt breccia&#39;,
+       &#39;Howardite-an&#39;, &#39;H4-melt breccia&#39;, &#39;Martian (basaltic breccia)&#39;,
+       &#39;L3-melt breccia&#39;, &#39;L~4-6&#39;, &#39;LL~5&#39;, &#39;R3.5-4&#39;, &#39;CR7&#39;,
+       &#39;H-melt breccia&#39;, &#39;Lunar (norite)&#39;, &#39;L3.00&#39;, &#39;H3.0-3.4&#39;, &#39;L/LL4-6&#39;,
+       &#39;CM&#39;, &#39;EH7&#39;, &#39;L4-an&#39;, &#39;E-an&#39;, &#39;H3.8/3.9&#39;, &#39;L3.9-5&#39;, &#39;H3.8-6&#39;,
+       &#39;H3.4-5&#39;, &#39;L3.0-3.9&#39;, &#39;L3.5-3.8&#39;, &#39;H3.2-3.7&#39;, &#39;L3.6-4&#39;,
+       &#39;Iron, IIE?&#39;, &#39;C3/4-ung&#39;, &#39;L/LL3.5&#39;, &#39;L/LL3.6/3.7&#39;, &#39;H/L4-5&#39;,
+       &#39;LL~3&#39;, &#39;Pallasite?&#39;, &#39;LL5-7&#39;, &#39;LL3.9/4&#39;, &#39;H3.8-an&#39;, &#39;CR-an&#39;,
+       &#39;L/LL5-6&#39;, &#39;L(LL)5&#39;, &#39;L(LL)6&#39;, &#39;LL3.1-3.5&#39;, &#39;E5&#39;, &#39;Lodranite-an&#39;,
+       &#39;H3.2-6&#39;, &#39;H(?)4&#39;, &#39;E5-an&#39;, &#39;H3.2-an&#39;, &#39;EH6-an&#39;, &#39;Stone-ung&#39;,
+       &#39;C1/2-ung&#39;, &#39;L/LL&#39;], dtype=object)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="general-statistics">
+<h3>General statistics<a class="headerlink" href="#general-statistics" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">.describe()</span></code> method includes numeric columns by default.  Here we can force it to include all columns.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meteor</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>id</th>
+      <th>nametype</th>
+      <th>recclass</th>
+      <th>mass (g)</th>
+      <th>fall</th>
+      <th>year</th>
+      <th>reclat</th>
+      <th>reclong</th>
+      <th>GeoLocation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>45716</td>
+      <td>45716.000000</td>
+      <td>45716</td>
+      <td>45716</td>
+      <td>4.558500e+04</td>
+      <td>45716</td>
+      <td>45425.000000</td>
+      <td>38401.000000</td>
+      <td>38401.000000</td>
+      <td>38401</td>
+    </tr>
+    <tr>
+      <th>unique</th>
+      <td>45716</td>
+      <td>NaN</td>
+      <td>2</td>
+      <td>466</td>
+      <td>NaN</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>17100</td>
+    </tr>
+    <tr>
+      <th>top</th>
+      <td>Aachen</td>
+      <td>NaN</td>
+      <td>Valid</td>
+      <td>L6</td>
+      <td>NaN</td>
+      <td>Found</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>(0.0, 0.0)</td>
+    </tr>
+    <tr>
+      <th>freq</th>
+      <td>1</td>
+      <td>NaN</td>
+      <td>45641</td>
+      <td>8285</td>
+      <td>NaN</td>
+      <td>44609</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>6214</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>NaN</td>
+      <td>26889.735104</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1.327808e+04</td>
+      <td>NaN</td>
+      <td>1991.828817</td>
+      <td>-39.122580</td>
+      <td>61.074319</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>NaN</td>
+      <td>16860.683030</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>5.749889e+05</td>
+      <td>NaN</td>
+      <td>25.052766</td>
+      <td>46.378511</td>
+      <td>80.647298</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>NaN</td>
+      <td>1.000000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.000000e+00</td>
+      <td>NaN</td>
+      <td>860.000000</td>
+      <td>-87.366670</td>
+      <td>-165.433330</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>NaN</td>
+      <td>12688.750000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>7.200000e+00</td>
+      <td>NaN</td>
+      <td>1987.000000</td>
+      <td>-76.714240</td>
+      <td>0.000000</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>NaN</td>
+      <td>24261.500000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3.260000e+01</td>
+      <td>NaN</td>
+      <td>1998.000000</td>
+      <td>-71.500000</td>
+      <td>35.666670</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>NaN</td>
+      <td>40656.750000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>2.026000e+02</td>
+      <td>NaN</td>
+      <td>2003.000000</td>
+      <td>0.000000</td>
+      <td>157.166670</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>NaN</td>
+      <td>57458.000000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>6.000000e+07</td>
+      <td>NaN</td>
+      <td>2101.000000</td>
+      <td>81.166670</td>
+      <td>354.473330</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p><strong>Note</strong>: <code class="docutils literal notranslate"><span class="pre">NaN</span></code> values signify missing data. For instance, the fall column contains strings, so there is no value for mean; likewise, mass (g) is numeric, so we don’t have entries for the categorical summary statistics (unique, top, freq).</p>
+</section>
+</section>
+<section id="practice-yellow-cab-data">
+<h2>Practice: Yellow cab data<a class="headerlink" href="#practice-yellow-cab-data" title="Link to this heading">#</a></h2>
+<p>The following command downloads a <code class="docutils literal notranslate"><span class="pre">.parquet</span></code> file containing NYC Yellow Taxi data, a common storage format for moderate to large datasets.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>curl<span class="w"> </span>-O<span class="w"> </span>https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2024-01.parquet
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">taxi</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;yellow_tripdata_2024-01.parquet&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ol class="arabic simple">
+<li><p>Examine the first five rows of the dataset.</p></li>
+</ol>
+<ol class="arabic simple" start="2">
+<li><p>How much data are included in this dataset?</p></li>
+</ol>
+<ol class="arabic simple" start="3">
+<li><p>Calculate summary statistics for the <code class="docutils literal notranslate"><span class="pre">fare_amount</span></code>, <code class="docutils literal notranslate"><span class="pre">tolls_amount</span></code>, and <code class="docutils literal notranslate"><span class="pre">tip_amount</span></code>.  Do they add up to the <code class="docutils literal notranslate"><span class="pre">total_amount</span></code>?</p></li>
+</ol>
+<ol class="arabic simple" start="4">
+<li><p>Find the trip that has the longest trip by distance (<code class="docutils literal notranslate"><span class="pre">trip_distance</span></code>).</p></li>
+</ol>
+<ol class="arabic simple" start="5">
+<li><p>Compare the average <code class="docutils literal notranslate"><span class="pre">total_amount</span></code> for short versus long trips (short trip has <code class="docutils literal notranslate"><span class="pre">trip_distance</span></code> &lt; 10).  Make sure we do not include zero-distance trips.</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="data-cleaning">
+<h2>Data cleaning<a class="headerlink" href="#data-cleaning" title="Link to this heading">#</a></h2>
+<p>We will cover some common transformations that facilitate data analysis, including rearranging columns, type conversion, and sorting.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">minitaxi</span> <span class="o">=</span> <span class="n">taxi</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>  <span class="c1"># down-sample our dataset for illustration</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">minitaxi</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">minitaxi</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="dropping-columns">
+<h3>Dropping columns<a class="headerlink" href="#dropping-columns" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># drop all id columns and the store_and_fwd_flag column</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">minitaxi</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;ID$|store_and_fwd_flag&#39;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">columns_to_drop</span> <span class="o">=</span> <span class="n">minitaxi</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+<span class="n">columns_to_drop</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">minitaxi</span> <span class="o">=</span> <span class="n">minitaxi</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns_to_drop</span><span class="p">)</span>
+<span class="n">minitaxi</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="renaming-columns">
+<h3>Renaming columns<a class="headerlink" href="#renaming-columns" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">minitaxi</span> <span class="o">=</span> <span class="n">minitaxi</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;tpep_pickup_datetime&#39;</span><span class="p">:</span> <span class="s1">&#39;pickup&#39;</span><span class="p">,</span> 
+        <span class="s1">&#39;tpep_dropoff_datetime&#39;</span><span class="p">:</span> <span class="s1">&#39;dropoff&#39;</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+<span class="n">minitaxi</span><span class="o">.</span><span class="n">columns</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="examine-the-correct-data-types-type-conversion">
+<h2>Examine the correct data types (type conversion)<a class="headerlink" href="#examine-the-correct-data-types-type-conversion" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">minitaxi</span><span class="o">.</span><span class="n">dtypes</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">minitaxi</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+Index: 9524 entries, 597270 to 2512071
+Data columns (total 14 columns):
+ #   Column                 Non-Null Count  Dtype         
+---  ------                 --------------  -----         
+ 0   pickup                 9524 non-null   datetime64[us]
+ 1   dropoff                9524 non-null   datetime64[us]
+ 2   passenger_count        9524 non-null   float64       
+ 3   trip_distance          9524 non-null   float64       
+ 4   payment_type           9524 non-null   int64         
+ 5   fare_amount            9524 non-null   float64       
+ 6   extra                  9524 non-null   float64       
+ 7   mta_tax                9524 non-null   float64       
+ 8   tip_amount             9524 non-null   float64       
+ 9   tolls_amount           9524 non-null   float64       
+ 10  improvement_surcharge  9524 non-null   float64       
+ 11  total_amount           9524 non-null   float64       
+ 12  congestion_surcharge   9524 non-null   float64       
+ 13  Airport_fee            9524 non-null   float64       
+dtypes: datetime64[us](2), float64(11), int64(1)
+memory usage: 1.1 MB
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># cast passenger_count to integers</span>
+<span class="n">minitaxi</span><span class="p">[</span><span class="s1">&#39;passenger_count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">minitaxi</span><span class="p">[</span><span class="s1">&#39;passenger_count&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">minitaxi</span><span class="o">.</span><span class="n">dtypes</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pickup                   datetime64[us]
+dropoff                  datetime64[us]
+passenger_count                   int32
+trip_distance                   float64
+payment_type                      int64
+fare_amount                     float64
+extra                           float64
+mta_tax                         float64
+tip_amount                      float64
+tolls_amount                    float64
+improvement_surcharge           float64
+total_amount                    float64
+congestion_surcharge            float64
+Airport_fee                     float64
+dtype: object
+</pre></div>
+</div>
+</div>
+</div>
+<section id="dropping-rows-with-na-values">
+<h3>Dropping rows with NA values<a class="headerlink" href="#dropping-rows-with-na-values" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">minitaxi</span> <span class="o">=</span> <span class="n">minitaxi</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">minitaxi</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="creating-new-columns">
+<h2>Creating new columns<a class="headerlink" href="#creating-new-columns" title="Link to this heading">#</a></h2>
+<p>Let’s calculate the following for each row:</p>
+<ol class="arabic simple">
+<li><p>elapsed time of the trip</p></li>
+<li><p>the tip percentage</p></li>
+<li><p>the total taxes, tolls, fees, and surcharges</p></li>
+<li><p>the average speed of the taxi</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">minitaxi</span> <span class="o">=</span> <span class="n">minitaxi</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+    <span class="n">elapsed_time</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">dropoff</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">pickup</span><span class="p">,</span>
+    <span class="n">cost_before_tip</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">total_amount</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">tip_amount</span><span class="p">,</span>
+    <span class="n">tip_pct</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">tip_amount</span> <span class="o">/</span> <span class="n">x</span><span class="o">.</span><span class="n">cost_before_tip</span><span class="p">,</span> 
+    <span class="n">fees</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">cost_before_tip</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">fare_amount</span><span class="p">,</span> 
+    <span class="n">avg_speed</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">trip_distance</span><span class="o">.</span><span class="n">div</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">elapsed_time</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="mi">60</span> <span class="o">/</span> <span class="mi">60</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">minitaxi</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><em>Notes</em>:</p>
+<ul class="simple">
+<li><p>We used <code class="docutils literal notranslate"><span class="pre">lambda</span></code> functions to 1) avoid typing taxis repeatedly and 2) be able to access the <code class="docutils literal notranslate"><span class="pre">cost_before_tip</span></code> and <code class="docutils literal notranslate"><span class="pre">elapsed_time</span></code> columns in the same method that we create them.</p></li>
+<li><p>To create a single new column, we can also use <code class="docutils literal notranslate"><span class="pre">df['new_col']</span> <span class="pre">=</span> <span class="pre">&lt;values&gt;</span></code>.</p></li>
+</ul>
+</section>
+<section id="sorting-by-values">
+<h2>Sorting by values<a class="headerlink" href="#sorting-by-values" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sort by descending passenger count and pickups from earliest to latest</span>
+<span class="n">minitaxi</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;passenger_count&#39;</span><span class="p">,</span> <span class="s1">&#39;pickup&#39;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">])</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pick out the 3 trips with largest timespan</span>
+<span class="n">minitaxi</span><span class="o">.</span><span class="n">nlargest</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;elapsed_time&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="working-with-index">
+<h2>Working with index<a class="headerlink" href="#working-with-index" title="Link to this heading">#</a></h2>
+<p>Currently the index is simply using the row numbers, but if we wish to work with the pickup times significantly, perhaps indexing by the datetime column is more effective.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">minitaxi</span><span class="o">.</span><span class="n">index</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="setting-index">
+<h3>Setting index<a class="headerlink" href="#setting-index" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">minitaxi</span> <span class="o">=</span> <span class="n">minitaxi</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;pickup&#39;</span><span class="p">)</span>
+<span class="n">minitaxi</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="sorting-by-index">
+<h3>Sorting by index<a class="headerlink" href="#sorting-by-index" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sorting by indices</span>
+<span class="n">minitaxi</span> <span class="o">=</span> <span class="n">minitaxi</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+<span class="n">minitaxi</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>dropoff</th>
+      <th>passenger_count</th>
+      <th>trip_distance</th>
+      <th>payment_type</th>
+      <th>fare_amount</th>
+      <th>extra</th>
+      <th>mta_tax</th>
+      <th>tip_amount</th>
+      <th>tolls_amount</th>
+      <th>improvement_surcharge</th>
+      <th>total_amount</th>
+      <th>congestion_surcharge</th>
+      <th>Airport_fee</th>
+      <th>elapsed_time</th>
+      <th>cost_before_tip</th>
+      <th>tip_pct</th>
+      <th>fees</th>
+      <th>avg_speed</th>
+    </tr>
+    <tr>
+      <th>pickup</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2024-01-01 00:10:19</th>
+      <td>2024-01-01 00:22:58</td>
+      <td>1</td>
+      <td>1.92</td>
+      <td>1</td>
+      <td>13.5</td>
+      <td>1.0</td>
+      <td>0.5</td>
+      <td>3.70</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>22.20</td>
+      <td>2.5</td>
+      <td>0.0</td>
+      <td>0 days 00:12:39</td>
+      <td>18.5</td>
+      <td>0.200000</td>
+      <td>5.0</td>
+      <td>9.106719</td>
+    </tr>
+    <tr>
+      <th>2024-01-01 00:15:10</th>
+      <td>2024-01-01 00:22:51</td>
+      <td>1</td>
+      <td>1.64</td>
+      <td>1</td>
+      <td>10.0</td>
+      <td>1.0</td>
+      <td>0.5</td>
+      <td>3.00</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>18.00</td>
+      <td>2.5</td>
+      <td>0.0</td>
+      <td>0 days 00:07:41</td>
+      <td>15.0</td>
+      <td>0.200000</td>
+      <td>5.0</td>
+      <td>12.806941</td>
+    </tr>
+    <tr>
+      <th>2024-01-01 00:19:09</th>
+      <td>2024-01-01 00:41:03</td>
+      <td>3</td>
+      <td>9.12</td>
+      <td>1</td>
+      <td>38.7</td>
+      <td>1.0</td>
+      <td>0.5</td>
+      <td>8.74</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>52.44</td>
+      <td>2.5</td>
+      <td>0.0</td>
+      <td>0 days 00:21:54</td>
+      <td>43.7</td>
+      <td>0.200000</td>
+      <td>5.0</td>
+      <td>24.986301</td>
+    </tr>
+    <tr>
+      <th>2024-01-01 00:20:34</th>
+      <td>2024-01-01 00:25:54</td>
+      <td>1</td>
+      <td>0.80</td>
+      <td>1</td>
+      <td>6.5</td>
+      <td>3.5</td>
+      <td>0.5</td>
+      <td>2.30</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>13.80</td>
+      <td>2.5</td>
+      <td>0.0</td>
+      <td>0 days 00:05:20</td>
+      <td>11.5</td>
+      <td>0.200000</td>
+      <td>5.0</td>
+      <td>9.000000</td>
+    </tr>
+    <tr>
+      <th>2024-01-01 00:23:35</th>
+      <td>2024-01-01 00:49:13</td>
+      <td>1</td>
+      <td>3.08</td>
+      <td>1</td>
+      <td>23.3</td>
+      <td>1.0</td>
+      <td>0.5</td>
+      <td>7.08</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>35.38</td>
+      <td>2.5</td>
+      <td>0.0</td>
+      <td>0 days 00:25:38</td>
+      <td>28.3</td>
+      <td>0.250177</td>
+      <td>5.0</td>
+      <td>7.209363</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Recall how we have used <code class="docutils literal notranslate"><span class="pre">[0:4]</span></code> to locate the rows indexed 0 to 4. Since we are indexing by datetime, we can select within time ranges.</p>
+</section>
+<section id="selecting-by-index">
+<h3>Selecting by index<a class="headerlink" href="#selecting-by-index" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># selecting the taxi rides in the first 6 hours of the new year</span>
+<span class="n">minitaxi</span><span class="p">[</span><span class="s1">&#39;2024-01-01 00:00&#39;</span><span class="p">:</span><span class="s1">&#39;2024-01-01 06:00&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>dropoff</th>
+      <th>passenger_count</th>
+      <th>trip_distance</th>
+      <th>payment_type</th>
+      <th>fare_amount</th>
+      <th>extra</th>
+      <th>mta_tax</th>
+      <th>tip_amount</th>
+      <th>tolls_amount</th>
+      <th>improvement_surcharge</th>
+      <th>total_amount</th>
+      <th>congestion_surcharge</th>
+      <th>Airport_fee</th>
+      <th>elapsed_time</th>
+      <th>cost_before_tip</th>
+      <th>tip_pct</th>
+      <th>fees</th>
+      <th>avg_speed</th>
+    </tr>
+    <tr>
+      <th>pickup</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2024-01-01 00:10:19</th>
+      <td>2024-01-01 00:22:58</td>
+      <td>1</td>
+      <td>1.92</td>
+      <td>1</td>
+      <td>13.5</td>
+      <td>1.0</td>
+      <td>0.5</td>
+      <td>3.70</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>22.20</td>
+      <td>2.5</td>
+      <td>0.0</td>
+      <td>0 days 00:12:39</td>
+      <td>18.5</td>
+      <td>0.200000</td>
+      <td>5.0</td>
+      <td>9.106719</td>
+    </tr>
+    <tr>
+      <th>2024-01-01 00:15:10</th>
+      <td>2024-01-01 00:22:51</td>
+      <td>1</td>
+      <td>1.64</td>
+      <td>1</td>
+      <td>10.0</td>
+      <td>1.0</td>
+      <td>0.5</td>
+      <td>3.00</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>18.00</td>
+      <td>2.5</td>
+      <td>0.0</td>
+      <td>0 days 00:07:41</td>
+      <td>15.0</td>
+      <td>0.200000</td>
+      <td>5.0</td>
+      <td>12.806941</td>
+    </tr>
+    <tr>
+      <th>2024-01-01 00:19:09</th>
+      <td>2024-01-01 00:41:03</td>
+      <td>3</td>
+      <td>9.12</td>
+      <td>1</td>
+      <td>38.7</td>
+      <td>1.0</td>
+      <td>0.5</td>
+      <td>8.74</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>52.44</td>
+      <td>2.5</td>
+      <td>0.0</td>
+      <td>0 days 00:21:54</td>
+      <td>43.7</td>
+      <td>0.200000</td>
+      <td>5.0</td>
+      <td>24.986301</td>
+    </tr>
+    <tr>
+      <th>2024-01-01 00:20:34</th>
+      <td>2024-01-01 00:25:54</td>
+      <td>1</td>
+      <td>0.80</td>
+      <td>1</td>
+      <td>6.5</td>
+      <td>3.5</td>
+      <td>0.5</td>
+      <td>2.30</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>13.80</td>
+      <td>2.5</td>
+      <td>0.0</td>
+      <td>0 days 00:05:20</td>
+      <td>11.5</td>
+      <td>0.200000</td>
+      <td>5.0</td>
+      <td>9.000000</td>
+    </tr>
+    <tr>
+      <th>2024-01-01 00:23:35</th>
+      <td>2024-01-01 00:49:13</td>
+      <td>1</td>
+      <td>3.08</td>
+      <td>1</td>
+      <td>23.3</td>
+      <td>1.0</td>
+      <td>0.5</td>
+      <td>7.08</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>35.38</td>
+      <td>2.5</td>
+      <td>0.0</td>
+      <td>0 days 00:25:38</td>
+      <td>28.3</td>
+      <td>0.250177</td>
+      <td>5.0</td>
+      <td>7.209363</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2024-01-01 04:53:26</th>
+      <td>2024-01-02 03:11:13</td>
+      <td>6</td>
+      <td>9.97</td>
+      <td>1</td>
+      <td>52.0</td>
+      <td>1.0</td>
+      <td>0.5</td>
+      <td>0.00</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>57.00</td>
+      <td>2.5</td>
+      <td>0.0</td>
+      <td>0 days 22:17:47</td>
+      <td>57.0</td>
+      <td>0.000000</td>
+      <td>5.0</td>
+      <td>0.447158</td>
+    </tr>
+    <tr>
+      <th>2024-01-01 05:06:58</th>
+      <td>2024-01-01 05:10:03</td>
+      <td>1</td>
+      <td>0.63</td>
+      <td>1</td>
+      <td>5.8</td>
+      <td>1.0</td>
+      <td>0.5</td>
+      <td>2.16</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>12.96</td>
+      <td>2.5</td>
+      <td>0.0</td>
+      <td>0 days 00:03:05</td>
+      <td>10.8</td>
+      <td>0.200000</td>
+      <td>5.0</td>
+      <td>12.259459</td>
+    </tr>
+    <tr>
+      <th>2024-01-01 05:16:59</th>
+      <td>2024-01-01 05:35:39</td>
+      <td>1</td>
+      <td>4.26</td>
+      <td>1</td>
+      <td>22.6</td>
+      <td>1.0</td>
+      <td>0.5</td>
+      <td>5.52</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>33.12</td>
+      <td>2.5</td>
+      <td>0.0</td>
+      <td>0 days 00:18:40</td>
+      <td>27.6</td>
+      <td>0.200000</td>
+      <td>5.0</td>
+      <td>13.692857</td>
+    </tr>
+    <tr>
+      <th>2024-01-01 05:17:26</th>
+      <td>2024-01-01 05:22:32</td>
+      <td>1</td>
+      <td>1.90</td>
+      <td>1</td>
+      <td>10.0</td>
+      <td>1.0</td>
+      <td>0.5</td>
+      <td>0.00</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>15.00</td>
+      <td>2.5</td>
+      <td>0.0</td>
+      <td>0 days 00:05:06</td>
+      <td>15.0</td>
+      <td>0.000000</td>
+      <td>5.0</td>
+      <td>22.352941</td>
+    </tr>
+    <tr>
+      <th>2024-01-01 05:29:34</th>
+      <td>2024-01-01 05:38:38</td>
+      <td>1</td>
+      <td>1.57</td>
+      <td>1</td>
+      <td>10.7</td>
+      <td>1.0</td>
+      <td>0.5</td>
+      <td>0.00</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>15.70</td>
+      <td>2.5</td>
+      <td>0.0</td>
+      <td>0 days 00:09:04</td>
+      <td>15.7</td>
+      <td>0.000000</td>
+      <td>5.0</td>
+      <td>10.389706</td>
+    </tr>
+  </tbody>
+</table>
+<p>70 rows × 18 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="resetting-index">
+<h3>Resetting index<a class="headerlink" href="#resetting-index" title="Link to this heading">#</a></h3>
+<p>We can revert any specific column index back to row numbers, <strong>but</strong> notice that by setting and resetting index you lose the original row numbers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">minitaxi</span> <span class="o">=</span> <span class="n">minitaxi</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">minitaxi</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>pickup</th>
+      <th>dropoff</th>
+      <th>passenger_count</th>
+      <th>trip_distance</th>
+      <th>payment_type</th>
+      <th>fare_amount</th>
+      <th>extra</th>
+      <th>mta_tax</th>
+      <th>tip_amount</th>
+      <th>tolls_amount</th>
+      <th>improvement_surcharge</th>
+      <th>total_amount</th>
+      <th>congestion_surcharge</th>
+      <th>Airport_fee</th>
+      <th>elapsed_time</th>
+      <th>cost_before_tip</th>
+      <th>tip_pct</th>
+      <th>fees</th>
+      <th>avg_speed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2024-01-01 00:10:19</td>
+      <td>2024-01-01 00:22:58</td>
+      <td>1</td>
+      <td>1.92</td>
+      <td>1</td>
+      <td>13.5</td>
+      <td>1.0</td>
+      <td>0.5</td>
+      <td>3.70</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>22.20</td>
+      <td>2.5</td>
+      <td>0.0</td>
+      <td>0 days 00:12:39</td>
+      <td>18.5</td>
+      <td>0.200000</td>
+      <td>5.0</td>
+      <td>9.106719</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2024-01-01 00:15:10</td>
+      <td>2024-01-01 00:22:51</td>
+      <td>1</td>
+      <td>1.64</td>
+      <td>1</td>
+      <td>10.0</td>
+      <td>1.0</td>
+      <td>0.5</td>
+      <td>3.00</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>18.00</td>
+      <td>2.5</td>
+      <td>0.0</td>
+      <td>0 days 00:07:41</td>
+      <td>15.0</td>
+      <td>0.200000</td>
+      <td>5.0</td>
+      <td>12.806941</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2024-01-01 00:19:09</td>
+      <td>2024-01-01 00:41:03</td>
+      <td>3</td>
+      <td>9.12</td>
+      <td>1</td>
+      <td>38.7</td>
+      <td>1.0</td>
+      <td>0.5</td>
+      <td>8.74</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>52.44</td>
+      <td>2.5</td>
+      <td>0.0</td>
+      <td>0 days 00:21:54</td>
+      <td>43.7</td>
+      <td>0.200000</td>
+      <td>5.0</td>
+      <td>24.986301</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2024-01-01 00:20:34</td>
+      <td>2024-01-01 00:25:54</td>
+      <td>1</td>
+      <td>0.80</td>
+      <td>1</td>
+      <td>6.5</td>
+      <td>3.5</td>
+      <td>0.5</td>
+      <td>2.30</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>13.80</td>
+      <td>2.5</td>
+      <td>0.0</td>
+      <td>0 days 00:05:20</td>
+      <td>11.5</td>
+      <td>0.200000</td>
+      <td>5.0</td>
+      <td>9.000000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2024-01-01 00:23:35</td>
+      <td>2024-01-01 00:49:13</td>
+      <td>1</td>
+      <td>3.08</td>
+      <td>1</td>
+      <td>23.3</td>
+      <td>1.0</td>
+      <td>0.5</td>
+      <td>7.08</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>35.38</td>
+      <td>2.5</td>
+      <td>0.0</td>
+      <td>0 days 00:25:38</td>
+      <td>28.3</td>
+      <td>0.250177</td>
+      <td>5.0</td>
+      <td>7.209363</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+</section>
+<section id="practice-meteorite-indexing">
+<h2>Practice: Meteorite indexing<a class="headerlink" href="#practice-meteorite-indexing" title="Link to this heading">#</a></h2>
+<p>Using the <code class="docutils literal notranslate"><span class="pre">meteor</span></code> dataset,</p>
+<ol class="arabic simple">
+<li><p>cast the <code class="docutils literal notranslate"><span class="pre">year</span></code> column to an integer column.</p></li>
+<li><p>create a new column indicating whether the meteorite was observed falling before 1970.</p></li>
+<li><p>set the index to the id column and extract all the rows with IDs between 10,036 and 10,040 (inclusive) with <code class="docutils literal notranslate"><span class="pre">loc[]</span></code>.</p></li>
+<li><p>examine the <code class="docutils literal notranslate"><span class="pre">year</span></code> column to see if there are any data errors.</p></li>
+</ol>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="01b-data-cycle-case-study.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Case Study: Hospital readmissions</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../99-reference.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Reference</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-building-blocks">Basic building blocks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataframe-sources">DataFrame sources</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reading-from-a-file">Reading from a file</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api-requests-more-details-later">API requests (more details later)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-inspection">Basic inspection</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-type-of-data-are-available-in-the-dataframe-are-there-missing-data">What type of data are available in the dataframe? Are there missing data?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-much-data-are-available">How much data are available?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subsetting-and-indexing">Subsetting and indexing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calling-a-column-by-attributes-if-valid">Calling a column by attributes (if valid)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calling-a-column-by-keys">Calling a column by keys</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-columns-by-name">Multiple columns by name</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-rows">Selecting rows</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#indexing-with-loc-iloc">Indexing with <code class="docutils literal notranslate"><span class="pre">.loc[]</span></code>, <code class="docutils literal notranslate"><span class="pre">iloc[]</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#filtering-or-subsetting-by-condition">Filtering or subsetting by condition</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculating-summary-statistics">Calculating summary statistics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-many-of-the-meteorites-were-observed-falling-vs-found">How many of the meteorites were observed falling vs found?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behavior-of-mass-of-a-meterorite">Behavior of mass of a meterorite?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-many-unique-classes-are-in-this-dataset">How many unique classes are in this dataset?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#general-statistics">General statistics</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practice-yellow-cab-data">Practice: Yellow cab data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-cleaning">Data cleaning</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dropping-columns">Dropping columns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#renaming-columns">Renaming columns</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examine-the-correct-data-types-type-conversion">Examine the correct data types (type conversion)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dropping-rows-with-na-values">Dropping rows with NA values</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-new-columns">Creating new columns</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sorting-by-values">Sorting by values</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-index">Working with index</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-index">Setting index</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sorting-by-index">Sorting by index</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-by-index">Selecting by index</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resetting-index">Resetting index</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practice-meteorite-indexing">Practice: Meteorite indexing</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Moses Y.-H. Chan
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
