@@ -63,7 +63,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/02-data-manipulation';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Project Specification" href="../a0-project-specification.html" />
+    <link rel="next" title="pandas Part II" href="03-data-manipulation-2.html" />
     <link rel="prev" title="Case Study: Hospital readmissions" href="01b-data-cycle-case-study.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -174,6 +174,8 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Data manipulation with pandas</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">pandas</span></code> Part I</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-data-manipulation-2.html"><code class="docutils literal notranslate"><span class="pre">pandas</span></code> Part II</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-data-manipulation-3-join-class.html"><code class="docutils literal notranslate"><span class="pre">pandas</span></code> Part III</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Project</span></p>
 <ul class="nav bd-sidenav">
@@ -2642,6 +2644,97 @@ dtype: object
 </div>
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#meteor = meteor.dropna()</span>
+<span class="n">meteor</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meteor</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">meteor</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+Index: 38115 entries, 0 to 45715
+Data columns (total 10 columns):
+ #   Column       Non-Null Count  Dtype  
+---  ------       --------------  -----  
+ 0   name         38115 non-null  object 
+ 1   id           38115 non-null  int64  
+ 2   nametype     38115 non-null  object 
+ 3   recclass     38115 non-null  object 
+ 4   mass (g)     38115 non-null  float64
+ 5   fall         38115 non-null  object 
+ 6   year         38115 non-null  int32  
+ 7   reclat       38115 non-null  float64
+ 8   reclong      38115 non-null  float64
+ 9   GeoLocation  38115 non-null  object 
+dtypes: float64(3), int32(1), int64(1), object(5)
+memory usage: 3.1+ MB
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meteor</span> <span class="o">=</span> <span class="n">meteor</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meteor</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">KeyError</span><span class="g g-Whitespace">                                  </span>Traceback (most recent call last)
+<span class="nn">~\AppData\Local\Temp\ipykernel_26756\953505260.py</span> in <span class="ni">?</span><span class="nt">()</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">meteor</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+
+<span class="nn">~\AppData\Local\Programs\Python\Python311\Lib\site-packages\pandas\core\frame.py</span> in <span class="ni">?</span><span class="nt">(self, keys, drop, append, inplace, verify_integrity)</span>
+<span class="g g-Whitespace">   </span><span class="mi">6118</span>                     <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">6119</span>                         <span class="n">missing</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">6120</span> 
+<span class="g g-Whitespace">   </span><span class="mi">6121</span>         <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+<span class="ne">-&gt; </span><span class="mi">6122</span>             <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;None of </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2"> are in the columns&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">6123</span> 
+<span class="g g-Whitespace">   </span><span class="mi">6124</span>         <span class="k">if</span> <span class="n">inplace</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">6125</span>             <span class="n">frame</span> <span class="o">=</span> <span class="bp">self</span>
+
+<span class="ne">KeyError</span>: &quot;None of [&#39;id&#39;] are in the columns&quot;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meteor</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">10036</span><span class="p">:</span><span class="mi">10040</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+Index: 38115 entries, 1 to 30414
+Data columns (total 9 columns):
+ #   Column       Non-Null Count  Dtype  
+---  ------       --------------  -----  
+ 0   name         38115 non-null  object 
+ 1   nametype     38115 non-null  object 
+ 2   recclass     38115 non-null  object 
+ 3   mass (g)     38115 non-null  float64
+ 4   fall         38115 non-null  object 
+ 5   year         38115 non-null  int32  
+ 6   reclat       38115 non-null  float64
+ 7   reclong      38115 non-null  float64
+ 8   GeoLocation  38115 non-null  object 
+dtypes: float64(3), int32(1), object(5)
+memory usage: 2.8+ MB
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="for-your-reference-on-the-issue-of-indexing">
 <h2><em>For your reference</em>, on the issue of indexing<a class="headerlink" href="#for-your-reference-on-the-issue-of-indexing" title="Link to this heading">#</a></h2>
@@ -2689,11 +2782,11 @@ dtype: object
       </div>
     </a>
     <a class="right-next"
-       href="../a0-project-specification.html"
+       href="03-data-manipulation-2.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Project Specification</p>
+        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">pandas</span></code> Part II</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

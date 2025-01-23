@@ -1,0 +1,1615 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pandas Part II &#8212; DATA_ENG 200 Foundations of Data Science</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/03-data-manipulation-2';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pandas Part III" href="04-data-manipulation-3-join-class.html" />
+    <link rel="prev" title="pandas Part I" href="02-data-manipulation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../00-syllabus.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">DATA_ENG 200 Foundations of Data Science</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../00-syllabus.html">
+                    DATA_ENG 200: Foundations of Data Science
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Week 1 entry lecture</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01a-entry-activity.html">Entry survey</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Case study on readmissions</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01b-data-cycle-case-study.html">Case Study: Hospital readmissions</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Data manipulation with pandas</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="02-data-manipulation.html"><code class="docutils literal notranslate"><span class="pre">pandas</span></code> Part I</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">pandas</span></code> Part II</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-data-manipulation-3-join-class.html"><code class="docutils literal notranslate"><span class="pre">pandas</span></code> Part III</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../a0-project-specification.html">Project Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../a1-presentation-rubric.html">Presentation reference rubric</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Homework schedule</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../a2-homework-schedule.html">Homework Schedule</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Bibliography</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../99-reference.html">Reference</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/mosesyhc/de200-2025wn/blob/master/lectures/03-data-manipulation-2.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/03-data-manipulation-2.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>pandas Part II</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grouping-data">Grouping data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grouping-and-aggregating">Grouping and aggregating</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-general-recipe-for-grouping">A general recipe for grouping</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grouping-by-multiple-attributes">Grouping by multiple attributes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#aggregating-by-a-custom-function">Aggregating by a custom function</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apply">Apply</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-word-about-apply-effectiveness">Quick word about <code class="docutils literal notranslate"><span class="pre">apply()</span></code> effectiveness</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pivoting">Pivoting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melting">Melting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practice-baby-name-data">Practice: Baby Name Data</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="pandas-part-ii">
+<h1><code class="docutils literal notranslate"><span class="pre">pandas</span></code> Part II<a class="headerlink" href="#pandas-part-ii" title="Link to this heading">#</a></h1>
+<p>This document continues to cover data manipulation with <code class="docutils literal notranslate"><span class="pre">pandas</span></code>, including aggregation, reorganizing, and merging data.</p>
+<section id="grouping-data">
+<h2>Grouping data<a class="headerlink" href="#grouping-data" title="Link to this heading">#</a></h2>
+<p>Grouping together that are in the same category to aggregate over rows in each category.</p>
+<p>Useful in</p>
+<ul class="simple">
+<li><p>performing large operations, and</p></li>
+<li><p>summarizing trends in a dataset.</p></li>
+</ul>
+<p>Say we have a dataset with baby naming frequency throughout the years.  Perhaps we are first interested in</p>
+<ul class="simple">
+<li><p>how many babies are born in each year? (Good indicator of societal confidence..)</p></li>
+</ul>
+<figure class="align-default" id="pandas-group">
+<a class="reference internal image-reference" href="../_images/pandas-group-schema.png"><img alt="../_images/pandas-group-schema.png" src="../_images/pandas-group-schema.png" style="width: 80%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Example of aggregation in <code class="docutils literal notranslate"><span class="pre">pandas</span></code> <span id="id1">[<a class="reference internal" href="../99-reference.html#id2" title="Sam Lau, Joseph Gonzalez, and Deborah Nolan. Learning Data Science. &quot; O'Reilly Media, Inc.&quot;, 2023.">Lau <em>et al.</em>, 2023</a>]</span></span><a class="headerlink" href="#pandas-group" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">baby</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/ssa-names.csv.zip&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># number of total babies</span>
+<span class="n">baby</span><span class="p">[</span><span class="s1">&#39;Count&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>319731698
+</pre></div>
+</div>
+</div>
+</div>
+<section id="grouping-and-aggregating">
+<h3>Grouping and aggregating<a class="headerlink" href="#grouping-and-aggregating" title="Link to this heading">#</a></h3>
+<p><strong>How many babies are born each year?</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">counts_by_year</span> <span class="o">=</span> <span class="n">baby</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Year&#39;</span><span class="p">)[</span><span class="s1">&#39;Count&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a-general-recipe-for-grouping">
+<h3>A general recipe for grouping<a class="headerlink" href="#a-general-recipe-for-grouping" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">baby</span>                <span class="c1"># the dataframe</span>
+ <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Year&#39;</span><span class="p">)</span>    <span class="c1"># column(s) to group</span>
+ <span class="p">[</span><span class="s1">&#39;Count&#39;</span><span class="p">]</span>           <span class="c1"># column(s) to aggregate</span>
+ <span class="o">.</span><span class="n">sum</span><span class="p">()</span>              <span class="c1"># how to aggregate</span>
+<span class="p">)</span>
+
+<span class="c1"># general form</span>
+<span class="n">dataframe</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">column_name</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">aggregation_function</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="grouping-by-multiple-attributes">
+<h3>Grouping by multiple attributes<a class="headerlink" href="#grouping-by-multiple-attributes" title="Link to this heading">#</a></h3>
+<p><strong>How many female and male babies are born each year?</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">counts_by_year_and_sex</span> <span class="o">=</span> <span class="n">baby</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;Year&#39;</span><span class="p">,</span> <span class="s1">&#39;Sex&#39;</span><span class="p">])[</span><span class="s1">&#39;Count&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">counts_by_year_and_sex</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Year  Sex
+1910  F       352089
+      M       164223
+1911  F       372382
+      M       193441
+1912  F       504299
+              ...   
+2019  M      1545678
+2020  F      1303090
+      M      1478890
+2021  F      1320095
+      M      1492780
+Name: Count, Length: 224, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="aggregating-by-a-custom-function">
+<h3>Aggregating by a custom function<a class="headerlink" href="#aggregating-by-a-custom-function" title="Link to this heading">#</a></h3>
+<p><strong>What about number of unique names by year?</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">count_unique</span><span class="p">(</span><span class="n">names</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+
+<span class="n">unique_names_by_year</span> <span class="o">=</span> <span class="p">(</span><span class="n">baby</span>
+ <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Year&#39;</span><span class="p">)</span>
+ <span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span>
+ <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">count_unique</span><span class="p">)</span>           <span class="c1"># aggregate using the custom count_unique function</span>
+<span class="p">)</span>
+<span class="n">unique_names_by_year</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Year
+1910    1693
+1911    1740
+1912    2261
+1913    2476
+1914    2863
+        ... 
+2017    9173
+2018    9128
+2019    8990
+2020    8755
+2021    8924
+Name: Name, Length: 112, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="apply">
+<h2>Apply<a class="headerlink" href="#apply" title="Link to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Series.apply()</span></code> function applies an arbitrary function on each row entry.</p>
+<p><strong>Retrieve first letter of name</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_first_letter</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># assumes string input</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">names</span> <span class="o">=</span> <span class="n">baby</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span>
+<span class="n">names</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">get_first_letter</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0          M
+1          V
+2          E
+3          R
+4          M
+          ..
+6311499    Z
+6311500    Z
+6311501    Z
+6311502    Z
+6311503    Z
+Name: Name, Length: 6311504, dtype: object
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Number of letters in name</strong></p>
+<section id="quick-word-about-apply-effectiveness">
+<h3>Quick word about <code class="docutils literal notranslate"><span class="pre">apply()</span></code> effectiveness<a class="headerlink" href="#quick-word-about-apply-effectiveness" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">apply()</span></code> function is flexible, accommodating custom operations.  But it is <em>slow</em>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">does_nothing</span><span class="p">(</span><span class="n">year</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">year</span> <span class="o">/</span> <span class="mi">10</span> <span class="o">*</span> <span class="mi">10</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">years</span> <span class="o">=</span> <span class="n">baby</span><span class="p">[</span><span class="s1">&#39;Year&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> years / 10 * 10
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>23.7 ms ± 767 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> years.apply(does_nothing)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>699 ms ± 8.73 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="pivoting">
+<h2>Pivoting<a class="headerlink" href="#pivoting" title="Link to this heading">#</a></h2>
+<p>Pivoting is one way to organize and present data, by arranging the results of a group and aggregation when grouping with two columns.</p>
+<figure class="align-default" id="pandas-pivot">
+<a class="reference internal image-reference" href="../_images/pandas-pivot.png"><img alt="../_images/pandas-pivot.png" src="../_images/pandas-pivot.png" style="width: 80%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 2 </span><span class="caption-text">Example of pivoting in <code class="docutils literal notranslate"><span class="pre">pandas</span></code> (Data 100)</span><a class="headerlink" href="#pandas-pivot" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mf_pivot</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+    <span class="n">baby</span><span class="p">,</span>
+    <span class="n">index</span><span class="o">=</span><span class="s1">&#39;Year&#39;</span><span class="p">,</span>   <span class="c1"># Column to turn into new index</span>
+    <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;Sex&#39;</span><span class="p">,</span>  <span class="c1"># Column to turn into new columns</span>
+    <span class="n">values</span><span class="o">=</span><span class="s1">&#39;Count&#39;</span><span class="p">,</span> <span class="c1"># Column to aggregate for values</span>
+    <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;sum&#39;</span><span class="p">)</span>    <span class="c1"># Aggregation function</span>
+<span class="n">mf_pivot</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Sex</th>
+      <th>F</th>
+      <th>M</th>
+    </tr>
+    <tr>
+      <th>Year</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1910</th>
+      <td>352089</td>
+      <td>164223</td>
+    </tr>
+    <tr>
+      <th>1911</th>
+      <td>372382</td>
+      <td>193441</td>
+    </tr>
+    <tr>
+      <th>1912</th>
+      <td>504299</td>
+      <td>383704</td>
+    </tr>
+    <tr>
+      <th>1913</th>
+      <td>566973</td>
+      <td>461606</td>
+    </tr>
+    <tr>
+      <th>1914</th>
+      <td>696907</td>
+      <td>596441</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2017</th>
+      <td>1405262</td>
+      <td>1606186</td>
+    </tr>
+    <tr>
+      <th>2018</th>
+      <td>1382391</td>
+      <td>1570957</td>
+    </tr>
+    <tr>
+      <th>2019</th>
+      <td>1360299</td>
+      <td>1545678</td>
+    </tr>
+    <tr>
+      <th>2020</th>
+      <td>1303090</td>
+      <td>1478890</td>
+    </tr>
+    <tr>
+      <th>2021</th>
+      <td>1320095</td>
+      <td>1492780</td>
+    </tr>
+  </tbody>
+</table>
+<p>112 rows × 2 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="melting">
+<h2>Melting<a class="headerlink" href="#melting" title="Link to this heading">#</a></h2>
+<p>Melting is the “reverse” of pivoting, transforming <em>wide</em> tables into <em>long</em> tables.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mf_long</span> <span class="o">=</span> <span class="n">mf_pivot</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span>
+    <span class="n">id_vars</span><span class="o">=</span><span class="s1">&#39;Year&#39;</span><span class="p">,</span> <span class="c1"># column that uniquely identifies a row (can be multiple)</span>
+    <span class="n">var_name</span><span class="o">=</span><span class="s1">&#39;Sex&#39;</span><span class="p">,</span> <span class="c1"># name for the new column created by melting</span>
+    <span class="n">value_name</span><span class="o">=</span><span class="s1">&#39;Count&#39;</span> <span class="c1"># name for new column containing values from melted columns</span>
+<span class="p">)</span>
+<span class="n">mf_long</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Sex</th>
+      <th>Count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1910</td>
+      <td>F</td>
+      <td>352089</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1911</td>
+      <td>F</td>
+      <td>372382</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1912</td>
+      <td>F</td>
+      <td>504299</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1913</td>
+      <td>F</td>
+      <td>566973</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1914</td>
+      <td>F</td>
+      <td>696907</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>219</th>
+      <td>2017</td>
+      <td>M</td>
+      <td>1606186</td>
+    </tr>
+    <tr>
+      <th>220</th>
+      <td>2018</td>
+      <td>M</td>
+      <td>1570957</td>
+    </tr>
+    <tr>
+      <th>221</th>
+      <td>2019</td>
+      <td>M</td>
+      <td>1545678</td>
+    </tr>
+    <tr>
+      <th>222</th>
+      <td>2020</td>
+      <td>M</td>
+      <td>1478890</td>
+    </tr>
+    <tr>
+      <th>223</th>
+      <td>2021</td>
+      <td>M</td>
+      <td>1492780</td>
+    </tr>
+  </tbody>
+</table>
+<p>224 rows × 3 columns</p>
+</div></div></div>
+</div>
+<p><em>Why do we need</em> <code class="docutils literal notranslate"><span class="pre">reset_index()</span></code>?</p>
+</section>
+<section id="practice-baby-name-data">
+<h2>Practice: Baby Name Data<a class="headerlink" href="#practice-baby-name-data" title="Link to this heading">#</a></h2>
+<p>Using the baby names data, find the names with most occurrences in each year for both sexes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">baby</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>State</th>
+      <th>Sex</th>
+      <th>Year</th>
+      <th>Name</th>
+      <th>Count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>VA</td>
+      <td>F</td>
+      <td>1910</td>
+      <td>Mary</td>
+      <td>848</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>VA</td>
+      <td>F</td>
+      <td>1910</td>
+      <td>Virginia</td>
+      <td>270</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>VA</td>
+      <td>F</td>
+      <td>1910</td>
+      <td>Elizabeth</td>
+      <td>254</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>VA</td>
+      <td>F</td>
+      <td>1910</td>
+      <td>Ruth</td>
+      <td>218</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>VA</td>
+      <td>F</td>
+      <td>1910</td>
+      <td>Margaret</td>
+      <td>209</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>6311499</th>
+      <td>CA</td>
+      <td>M</td>
+      <td>2021</td>
+      <td>Zyan</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>6311500</th>
+      <td>CA</td>
+      <td>M</td>
+      <td>2021</td>
+      <td>Zyion</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>6311501</th>
+      <td>CA</td>
+      <td>M</td>
+      <td>2021</td>
+      <td>Zyire</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>6311502</th>
+      <td>CA</td>
+      <td>M</td>
+      <td>2021</td>
+      <td>Zylo</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>6311503</th>
+      <td>CA</td>
+      <td>M</td>
+      <td>2021</td>
+      <td>Zyrus</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+<p>6311504 rows × 5 columns</p>
+</div></div></div>
+</div>
+<p>Using the meteorite data from the <code class="docutils literal notranslate"><span class="pre">Meteorite_Landings.csv</span></code> file,</p>
+<ol class="arabic simple">
+<li><p>use <code class="docutils literal notranslate"><span class="pre">groupby</span></code> to examine the number of meteors recorded each year.</p></li>
+<li><p>use <code class="docutils literal notranslate"><span class="pre">groupby</span></code> to find the heaviest meteorite from each year and report its name and mass.</p></li>
+<li><p>create a pivot table that shows for each year</p>
+<ul class="simple">
+<li><p>the number of meteorites, and</p></li>
+<li><p>the 95th percentile of meteorite mass.</p></li>
+</ul>
+</li>
+<li><p>create a pivot table to compare for each year</p>
+<ul class="simple">
+<li><p>the 5%, 25%, 50%, 75%, and 95% percentile of the mass column for the meteorites that were found versus observed falling.</p></li>
+</ul>
+</li>
+<li><p>melt the two tables above to create a <em>long</em>-format table.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meteor</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/Meteorite_Landings.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meteor</span><span class="o">.</span><span class="n">nametype</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([&#39;Valid&#39;, &#39;Relict&#39;], dtype=object)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">pivot_table_percentiles</span> <span class="o">=</span> <span class="n">meteor</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+    <span class="n">index</span><span class="o">=</span><span class="s1">&#39;year&#39;</span><span class="p">,</span>
+    <span class="n">values</span><span class="o">=</span><span class="s1">&#39;mass (g)&#39;</span><span class="p">,</span>
+    <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;fall&#39;</span><span class="p">,</span>
+    <span class="n">aggfunc</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">95</span><span class="p">)]</span>
+<span class="p">)</span>
+<span class="n">pivot_table_percentiles</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+
+    .dataframe thead tr:last-of-type th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="4" halign="left">&lt;lambda&gt;</th>
+    </tr>
+    <tr>
+      <th>fall</th>
+      <th>Fell</th>
+      <th>Found</th>
+      <th>Fell</th>
+      <th>Found</th>
+    </tr>
+    <tr>
+      <th>year</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>860.0</th>
+      <td>472.000</td>
+      <td>NaN</td>
+      <td>472.000</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1399.0</th>
+      <td>107000.000</td>
+      <td>NaN</td>
+      <td>107000.000</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1490.0</th>
+      <td>103.300</td>
+      <td>NaN</td>
+      <td>103.300</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1491.0</th>
+      <td>127000.000</td>
+      <td>NaN</td>
+      <td>127000.000</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1575.0</th>
+      <td>NaN</td>
+      <td>50000000.00</td>
+      <td>NaN</td>
+      <td>50000000.00</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2010.0</th>
+      <td>100.830</td>
+      <td>1.80</td>
+      <td>4121.000</td>
+      <td>1843.50</td>
+    </tr>
+    <tr>
+      <th>2011.0</th>
+      <td>1445.950</td>
+      <td>3.00</td>
+      <td>13120.000</td>
+      <td>3238.80</td>
+    </tr>
+    <tr>
+      <th>2012.0</th>
+      <td>1087.875</td>
+      <td>25.33</td>
+      <td>2804.625</td>
+      <td>3664.15</td>
+    </tr>
+    <tr>
+      <th>2013.0</th>
+      <td>100000.000</td>
+      <td>37.11</td>
+      <td>100000.000</td>
+      <td>962.20</td>
+    </tr>
+    <tr>
+      <th>2101.0</th>
+      <td>NaN</td>
+      <td>55.00</td>
+      <td>NaN</td>
+      <td>55.00</td>
+    </tr>
+  </tbody>
+</table>
+<p>245 rows × 4 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">pivot_table_95p</span> <span class="o">=</span> <span class="n">meteor</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+    <span class="n">index</span><span class="o">=</span><span class="s1">&#39;year&#39;</span><span class="p">,</span>
+    <span class="n">values</span><span class="o">=</span><span class="s1">&#39;mass (g)&#39;</span><span class="p">,</span>
+    <span class="n">aggfunc</span><span class="o">=</span><span class="p">[</span><span class="nb">len</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">),</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">)]</span>
+<span class="p">)</span>
+<span class="n">pivot_table_95p</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;num. of meteorites&#39;</span><span class="p">,</span> <span class="s1">&#39;5% percentile of mass&#39;</span><span class="p">,</span> <span class="s1">&#39;95% percentile of mass&#39;</span><span class="p">]</span>
+<span class="n">pivot_table_95p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>num. of meteorites</th>
+      <th>5% percentile of mass</th>
+      <th>95% percentile of mass</th>
+    </tr>
+    <tr>
+      <th>year</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>860.0</th>
+      <td>1</td>
+      <td>472.00</td>
+      <td>472.00</td>
+    </tr>
+    <tr>
+      <th>920.0</th>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1399.0</th>
+      <td>1</td>
+      <td>107000.00</td>
+      <td>107000.00</td>
+    </tr>
+    <tr>
+      <th>1490.0</th>
+      <td>1</td>
+      <td>103.30</td>
+      <td>103.30</td>
+    </tr>
+    <tr>
+      <th>1491.0</th>
+      <td>1</td>
+      <td>127000.00</td>
+      <td>127000.00</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2010.0</th>
+      <td>1005</td>
+      <td>1.80</td>
+      <td>2071.60</td>
+    </tr>
+    <tr>
+      <th>2011.0</th>
+      <td>713</td>
+      <td>3.00</td>
+      <td>3381.80</td>
+    </tr>
+    <tr>
+      <th>2012.0</th>
+      <td>234</td>
+      <td>25.39</td>
+      <td>3639.45</td>
+    </tr>
+    <tr>
+      <th>2013.0</th>
+      <td>11</td>
+      <td>37.90</td>
+      <td>50500.00</td>
+    </tr>
+    <tr>
+      <th>2101.0</th>
+      <td>1</td>
+      <td>55.00</td>
+      <td>55.00</td>
+    </tr>
+  </tbody>
+</table>
+<p>265 rows × 3 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pivot_table_95p</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span>
+    <span class="n">id_vars</span><span class="o">=</span><span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="c1"># column that uniquely identifies a row (can be multiple)</span>
+    <span class="n">var_name</span><span class="o">=</span><span class="s1">&#39;variable&#39;</span><span class="p">,</span> <span class="c1"># name for the new column created by melting</span>
+    <span class="n">value_name</span><span class="o">=</span><span class="s1">&#39;value&#39;</span> <span class="c1"># name for new column containing values from melted columns</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>year</th>
+      <th>variable</th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>860.0</td>
+      <td>num. of meteorites</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>920.0</td>
+      <td>num. of meteorites</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1399.0</td>
+      <td>num. of meteorites</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1490.0</td>
+      <td>num. of meteorites</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1491.0</td>
+      <td>num. of meteorites</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>790</th>
+      <td>2010.0</td>
+      <td>95% percentile of mass</td>
+      <td>2071.60</td>
+    </tr>
+    <tr>
+      <th>791</th>
+      <td>2011.0</td>
+      <td>95% percentile of mass</td>
+      <td>3381.80</td>
+    </tr>
+    <tr>
+      <th>792</th>
+      <td>2012.0</td>
+      <td>95% percentile of mass</td>
+      <td>3639.45</td>
+    </tr>
+    <tr>
+      <th>793</th>
+      <td>2013.0</td>
+      <td>95% percentile of mass</td>
+      <td>50500.00</td>
+    </tr>
+    <tr>
+      <th>794</th>
+      <td>2101.0</td>
+      <td>95% percentile of mass</td>
+      <td>55.00</td>
+    </tr>
+  </tbody>
+</table>
+<p>795 rows × 3 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">p05</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">p95</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">)</span>
+
+<span class="n">pivot_table_p</span> <span class="o">=</span> <span class="n">meteor</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+    <span class="n">index</span><span class="o">=</span><span class="s1">&#39;year&#39;</span><span class="p">,</span>
+    <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;fall&#39;</span><span class="p">,</span>
+    <span class="n">values</span><span class="o">=</span><span class="s1">&#39;mass (g)&#39;</span><span class="p">,</span>
+    <span class="n">aggfunc</span><span class="o">=</span><span class="p">[</span><span class="n">p05</span><span class="p">,</span> <span class="n">p95</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Note the use of &quot;stack&quot; due to the multiple levels from the index and columns</span>
+<span class="n">pivot_table_p</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">future_stack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>  <span class="c1"># future_stack=True is only here for a pandas version issue, it is not necessary</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>fall</th>
+      <th>year</th>
+      <th>level_1</th>
+      <th>Fell</th>
+      <th>Found</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>860.0</td>
+      <td>p05</td>
+      <td>472.000</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>860.0</td>
+      <td>p95</td>
+      <td>472.000</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1399.0</td>
+      <td>p05</td>
+      <td>107000.000</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1399.0</td>
+      <td>p95</td>
+      <td>107000.000</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1490.0</td>
+      <td>p05</td>
+      <td>103.300</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>485</th>
+      <td>2012.0</td>
+      <td>p95</td>
+      <td>2804.625</td>
+      <td>3664.15</td>
+    </tr>
+    <tr>
+      <th>486</th>
+      <td>2013.0</td>
+      <td>p05</td>
+      <td>100000.000</td>
+      <td>37.11</td>
+    </tr>
+    <tr>
+      <th>487</th>
+      <td>2013.0</td>
+      <td>p95</td>
+      <td>100000.000</td>
+      <td>962.20</td>
+    </tr>
+    <tr>
+      <th>488</th>
+      <td>2101.0</td>
+      <td>p05</td>
+      <td>NaN</td>
+      <td>55.00</td>
+    </tr>
+    <tr>
+      <th>489</th>
+      <td>2101.0</td>
+      <td>p95</td>
+      <td>NaN</td>
+      <td>55.00</td>
+    </tr>
+  </tbody>
+</table>
+<p>490 rows × 4 columns</p>
+</div></div></div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="02-data-manipulation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">pandas</span></code> Part I</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="04-data-manipulation-3-join-class.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">pandas</span></code> Part III</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grouping-data">Grouping data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grouping-and-aggregating">Grouping and aggregating</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-general-recipe-for-grouping">A general recipe for grouping</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grouping-by-multiple-attributes">Grouping by multiple attributes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#aggregating-by-a-custom-function">Aggregating by a custom function</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apply">Apply</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-word-about-apply-effectiveness">Quick word about <code class="docutils literal notranslate"><span class="pre">apply()</span></code> effectiveness</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pivoting">Pivoting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melting">Melting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practice-baby-name-data">Practice: Baby Name Data</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Moses Y.-H. Chan
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
