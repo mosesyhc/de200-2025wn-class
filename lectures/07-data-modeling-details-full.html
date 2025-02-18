@@ -57,10 +57,12 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/07-data-modeling-details-full';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Project Specification" href="../a0-project-specification.html" />
+    <link rel="next" title="Application Programming Interface (API)" href="08-api.html" />
     <link rel="prev" title="Introduction to (data | statistical | mathematical) modeling" href="06-data-modeling-full.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -190,6 +192,14 @@
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="06-data-modeling-full.html">Introduction to (data | statistical | mathematical) modeling</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Some important (high-level) considerations</a></li>
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Data retrieval</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="08-api.html">Application Programming Interface (API)</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Project</span></p>
 <ul class="nav bd-sidenav">
@@ -382,6 +392,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Some important (high-level) considerations</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-algorithms">Learning algorithms</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#supervised-learning">Supervised learning</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unsupervised-learning">Unsupervised learning</a></li>
@@ -390,6 +401,13 @@ document.write(`
 </ul>
 </li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#practice-diamonds-dataset">Practice: diamonds dataset</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#training-testing-and-validation">Training, testing, and validation</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#regularization-and-hyperparameter-tuning">Regularization and hyperparameter tuning</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-layer-relu-network-as-an-example">Multi-layer ReLU network as an example</a></li>
+</ul>
+
             </nav>
         </div>
     </div>
@@ -440,7 +458,7 @@ document.write(`
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Linear Regression RMSE: </span><span class="si">{</span><span class="n">root_mean_squared_error</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">y_pred_lr</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="c1"># Nearest Neighbors</span>
-<span class="n">knn</span> <span class="o">=</span> <span class="n">KNeighborsRegressor</span><span class="p">()</span>
+<span class="n">knn</span> <span class="o">=</span> <span class="n">KNeighborsRegressor</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
 <span class="n">knn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">y_pred_knn</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Nearest Neighbors RMSE: </span><span class="si">{</span><span class="n">root_mean_squared_error</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">y_pred_knn</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -455,8 +473,8 @@ document.write(`
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Linear Regression RMSE: 392.1602706380618
-Nearest Neighbors RMSE: 368.4116952231256
-Random Forest RMSE: 345.52944155130456
+Nearest Neighbors RMSE: 719.5471408610105
+Random Forest RMSE: 345.47914963289435
 </pre></div>
 </div>
 </div>
@@ -474,7 +492,7 @@ Random Forest RMSE: 345.52944155130456
 <span class="n">markerstyles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">]</span>
 
 <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">y_pred</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">y_preds</span><span class="p">):</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="n">linestyles</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="n">linestyles</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
     <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="n">markerstyles</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;fit&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">)</span>
@@ -485,7 +503,7 @@ Random Forest RMSE: 345.52944155130456
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/9a45ece8d697afffec69ba7fbbf49d52abfbc95d69233632a272536267f1e52b.png" src="../_images/9a45ece8d697afffec69ba7fbbf49d52abfbc95d69233632a272536267f1e52b.png" />
+<img alt="../_images/c09cbaad5f2ab0d274a78cd1adb8e816d31fac033e475428daea6cf30a3cb09c.png" src="../_images/c09cbaad5f2ab0d274a78cd1adb8e816d31fac033e475428daea6cf30a3cb09c.png" />
 </div>
 </div>
 <p><strong>Classification</strong></p>
@@ -537,7 +555,7 @@ Random Forest RMSE: 345.52944155130456
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/ebabf72f9b1c8fa55174a3776ffa7449bc2e95f7b2fa7b8582095080a96dd05e.png" src="../_images/ebabf72f9b1c8fa55174a3776ffa7449bc2e95f7b2fa7b8582095080a96dd05e.png" />
+<img alt="../_images/02300e4257476fbec9fdb429af2c85f578ced74d5329ebc2571a66e0ecf55484.png" src="../_images/02300e4257476fbec9fdb429af2c85f578ced74d5329ebc2571a66e0ecf55484.png" />
 </div>
 </div>
 </section>
@@ -569,7 +587,7 @@ Random Forest RMSE: 345.52944155130456
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">m</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="n">y_pred</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="n">penguins</span><span class="p">[</span><span class="s1">&#39;species_pred&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_pred</span>
@@ -589,7 +607,7 @@ Random Forest RMSE: 345.52944155130456
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;flipper_length_mm&#39;, ylabel=&#39;body_mass_g&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/e4ffaae317d9d69c51a646cf4d818f3bbf4ea7f721d5cbf5d42bb45ea8db545a.png" src="../_images/e4ffaae317d9d69c51a646cf4d818f3bbf4ea7f721d5cbf5d42bb45ea8db545a.png" />
+<img alt="../_images/45c271bbf6ba7c76098cf915d7490ecf5043eae84732a1989c7d5f9804d6f154.png" src="../_images/45c271bbf6ba7c76098cf915d7490ecf5043eae84732a1989c7d5f9804d6f154.png" />
 </div>
 </div>
 </section>
@@ -614,6 +632,102 @@ Random Forest RMSE: 345.52944155130456
 </figure>
 </section>
 </section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="practice-diamonds-dataset">
+<h1>Practice: diamonds dataset<a class="headerlink" href="#practice-diamonds-dataset" title="Link to this heading">#</a></h1>
+<p>Consider the <code class="docutils literal notranslate"><span class="pre">diamonds</span></code> dataset.  Specifically, investigate the relationship between <code class="docutils literal notranslate"><span class="pre">price</span></code> and other variables in the dataset.</p>
+<p><strong>Qualitative</strong>
+Answer the modeling process questions:</p>
+<ol class="arabic simple">
+<li><p>How do we choose a model?</p></li>
+<li><p>How do we quantify the unexplained error?</p></li>
+<li><p>How do we choose the parameters (given data)?</p></li>
+<li><p>How do we evaluate if the model is “good”?</p></li>
+</ol>
+<p><strong>Quantitative</strong></p>
+<ol class="arabic simple">
+<li><p>Choose two supervised learning models to predict price.</p></li>
+<li><p>Describe the differences between the chosen models.</p></li>
+<li><p>How well does each model perform?  Conduct a 10-fold cross validation and report the training and testing performance.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sklearn</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sklearn</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="n">diamonds</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s1">&#39;diamonds&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.4.0
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="training-testing-and-validation">
+<h1>Training, testing, and validation<a class="headerlink" href="#training-testing-and-validation" title="Link to this heading">#</a></h1>
+<p>A brief word through <a class="reference external" href="https://mlu-explain.github.io/train-test-validation/">https://mlu-explain.github.io/train-test-validation/</a>.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="regularization-and-hyperparameter-tuning">
+<h1>Regularization and hyperparameter tuning<a class="headerlink" href="#regularization-and-hyperparameter-tuning" title="Link to this heading">#</a></h1>
+<p>Example: with a linear regression base.</p>
+<p>Lasso (<span class="math notranslate nohighlight">\(\ell_1\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[\min_{w} { \frac{1}{2n} ||X w - y||_2 ^ 2 + \alpha ||w||_1}\]</div>
+<p>Ridge (<span class="math notranslate nohighlight">\(\ell_2\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[\min_{w} { \frac{1}{2n} ||X w - y||_2 ^ 2 + \alpha ||w||_2 ^ 2}\]</div>
+<p>Elastic Net:</p>
+<div class="math notranslate nohighlight">
+\[\min_{w} { \frac{1}{2n} ||X w - y||_2 ^ 2 + \alpha \rho ||w||_1 +
+\frac{\alpha(1-\rho)}{2} ||w||_2 ^ 2}\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">lasso_path</span><span class="p">,</span> <span class="n">enet_path</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">penguins</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;body_mass_g&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">penguins</span><span class="p">[</span><span class="s1">&#39;body_mass_g&#39;</span><span class="p">]</span>
+
+<span class="c1"># print(&quot;Computing regularization path using the lasso...&quot;)</span>
+<span class="n">eps</span> <span class="o">=</span> <span class="mf">5e-4</span>
+<span class="n">alphas_lasso</span><span class="p">,</span> <span class="n">coefs_lasso</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lasso_path</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">)</span>
+<span class="n">alphas_enet</span><span class="p">,</span> <span class="n">coefs_enet</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">enet_path</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span> <span class="n">l1_ratio</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> 
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">cycle</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">cycle</span><span class="p">([</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;k&quot;</span><span class="p">])</span>
+<span class="n">neg_log_alphas_lasso</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">alphas_lasso</span><span class="p">)</span>
+<span class="n">neg_log_alphas_enet</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">alphas_enet</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">coef_l</span><span class="p">,</span> <span class="n">coef_e</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">coefs_lasso</span><span class="p">,</span> <span class="n">coefs_enet</span><span class="p">,</span> <span class="n">colors</span><span class="p">):</span>
+    <span class="n">l1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">neg_log_alphas_lasso</span><span class="p">,</span> <span class="n">coef_l</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
+    <span class="n">l2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">neg_log_alphas_enet</span><span class="p">,</span> <span class="n">coef_e</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;-Log(alpha)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;coefficients&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Lasso and Elastic-Net Paths&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">((</span><span class="n">l1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">l2</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="p">(</span><span class="s2">&quot;Lasso&quot;</span><span class="p">,</span> <span class="s2">&quot;Elastic-Net&quot;</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower left&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="multi-layer-relu-network-as-an-example">
+<h1>Multi-layer ReLU network as an example<a class="headerlink" href="#multi-layer-relu-network-as-an-example" title="Link to this heading">#</a></h1>
+<p>Discussion on Section 1.1 in <a class="reference external" href="https://watermark.silverchair.com/iaac001.pdf">Nonparametric regression on low-dimensional manifolds using deep ReLU networks.</a></p>
 </section>
 
     <script type="text/x-thebe-config">
@@ -656,11 +770,11 @@ Random Forest RMSE: 345.52944155130456
       </div>
     </a>
     <a class="right-next"
-       href="../a0-project-specification.html"
+       href="08-api.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Project Specification</p>
+        <p class="prev-next-title">Application Programming Interface (API)</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -680,6 +794,7 @@ Random Forest RMSE: 345.52944155130456
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Some important (high-level) considerations</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-algorithms">Learning algorithms</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#supervised-learning">Supervised learning</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unsupervised-learning">Unsupervised learning</a></li>
@@ -688,6 +803,13 @@ Random Forest RMSE: 345.52944155130456
 </ul>
 </li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#practice-diamonds-dataset">Practice: diamonds dataset</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#training-testing-and-validation">Training, testing, and validation</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#regularization-and-hyperparameter-tuning">Regularization and hyperparameter tuning</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-layer-relu-network-as-an-example">Multi-layer ReLU network as an example</a></li>
+</ul>
+
   </nav></div>
 
 </div></div>
