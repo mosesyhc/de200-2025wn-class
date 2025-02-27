@@ -60,7 +60,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/08-api';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Project Specification" href="../a0-project-specification.html" />
+    <link rel="next" title="Web-scraping with BeautifulSoup4" href="09-web-scraping.html" />
     <link rel="prev" title="Some important (high-level) considerations" href="07-data-modeling-details-full.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -198,6 +198,7 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Data retrieval</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Application Programming Interface (API)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-web-scraping.html">Web-scraping with <code class="docutils literal notranslate"><span class="pre">BeautifulSoup4</span></code></a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Project</span></p>
 <ul class="nav bd-sidenav">
@@ -498,16 +499,319 @@ document.write(`
 </div>
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">artists</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">artists</span><span class="p">[</span><span class="s1">&#39;pagination&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;total&#39;: 14105,
+ &#39;limit&#39;: 12,
+ &#39;offset&#39;: 0,
+ &#39;total_pages&#39;: 1176,
+ &#39;current_page&#39;: 1,
+ &#39;next_url&#39;: &#39;https://api.artic.edu/api/v1/artists?page=2&#39;}
+</pre></div>
+</div>
+</div>
+</div>
 <p><strong>Note:</strong> We only retrieve 12 records from a total of &gt; 10000 records.</p>
 </section>
 <section id="request-with-parameters">
 <h3>Request with parameters<a class="headerlink" href="#request-with-parameters" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url_artist</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;limit&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">})</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r100</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url_artist</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;limit&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;page&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">})</span>
 </pre></div>
 </div>
 </div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">artists_100</span> <span class="o">=</span> <span class="n">r100</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">artist_data</span> <span class="o">=</span> <span class="n">artists_100</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">artist_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>api_model</th>
+      <th>api_link</th>
+      <th>title</th>
+      <th>sort_title</th>
+      <th>alt_titles</th>
+      <th>is_artist</th>
+      <th>birth_date</th>
+      <th>death_date</th>
+      <th>description</th>
+      <th>ulan_id</th>
+      <th>suggest_autocomplete_all</th>
+      <th>source_updated_at</th>
+      <th>updated_at</th>
+      <th>timestamp</th>
+      <th>suggest_autocomplete_boosted</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>76531</td>
+      <td>agents</td>
+      <td>https://api.artic.edu/api/v1/agents/76531</td>
+      <td>Carlo Ernesto Liverati</td>
+      <td>Liverati, Carlo Ernesto</td>
+      <td>[C. E. Liveratif, C. E. Liverati]</td>
+      <td>True</td>
+      <td>1805.0</td>
+      <td>1844.0</td>
+      <td>None</td>
+      <td>None</td>
+      <td>{'input': ['Carlo Ernesto Liverati', 'Liverati...</td>
+      <td>2025-01-28T18:05:32-06:00</td>
+      <td>2025-01-28T18:10:22-06:00</td>
+      <td>2025-02-18T10:13:14-06:00</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>74323</td>
+      <td>agents</td>
+      <td>https://api.artic.edu/api/v1/agents/74323</td>
+      <td>Nicolas Bazin</td>
+      <td>Bazin, Nicolas</td>
+      <td>None</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>None</td>
+      <td>None</td>
+      <td>{'input': ['Nicolas Bazin', 'Bazin, Nicolas'],...</td>
+      <td>2025-01-28T18:05:32-06:00</td>
+      <td>2025-01-28T18:10:22-06:00</td>
+      <td>2025-02-18T10:13:14-06:00</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>74315</td>
+      <td>agents</td>
+      <td>https://api.artic.edu/api/v1/agents/74315</td>
+      <td>Johann Jakob Gräsman</td>
+      <td>Gräsman, Johann Jakob</td>
+      <td>[Johann Jakob Kresman, Johann Jacob Graessmann]</td>
+      <td>True</td>
+      <td>1726.0</td>
+      <td>1759.0</td>
+      <td>None</td>
+      <td>None</td>
+      <td>{'input': ['Johann Jakob Gräsman', 'Gräsman, J...</td>
+      <td>2025-01-28T18:05:32-06:00</td>
+      <td>2025-01-28T18:10:22-06:00</td>
+      <td>2025-02-18T10:13:14-06:00</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>70737</td>
+      <td>agents</td>
+      <td>https://api.artic.edu/api/v1/agents/70737</td>
+      <td>Johann Baptist Klauber</td>
+      <td>Klauber, Johann Baptist</td>
+      <td>[Johann B. Klauber]</td>
+      <td>True</td>
+      <td>1712.0</td>
+      <td>1787.0</td>
+      <td>None</td>
+      <td>None</td>
+      <td>{'input': ['Johann Baptist Klauber', 'Klauber,...</td>
+      <td>2025-01-28T18:05:32-06:00</td>
+      <td>2025-01-28T18:10:22-06:00</td>
+      <td>2025-02-18T10:13:14-06:00</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>69511</td>
+      <td>agents</td>
+      <td>https://api.artic.edu/api/v1/agents/69511</td>
+      <td>Alfred Jones</td>
+      <td>Jones, Alfred</td>
+      <td>None</td>
+      <td>True</td>
+      <td>1819.0</td>
+      <td>1900.0</td>
+      <td>None</td>
+      <td>None</td>
+      <td>{'input': ['Alfred Jones', 'Jones, Alfred'], '...</td>
+      <td>2025-01-28T18:05:32-06:00</td>
+      <td>2025-01-28T18:10:22-06:00</td>
+      <td>2025-02-18T10:13:14-06:00</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>95</th>
+      <td>48830</td>
+      <td>agents</td>
+      <td>https://api.artic.edu/api/v1/agents/48830</td>
+      <td>Gioacchino Assereto</td>
+      <td>Assereto, Gioacchino</td>
+      <td>[Giovacchino Asserto, Giovacchino Axareto, Gio...</td>
+      <td>True</td>
+      <td>1600.0</td>
+      <td>1649.0</td>
+      <td>None</td>
+      <td>None</td>
+      <td>{'input': ['Gioacchino Assereto', 'Assereto, G...</td>
+      <td>2025-01-13T09:14:56-06:00</td>
+      <td>2025-01-13T09:16:21-06:00</td>
+      <td>2025-02-18T10:13:14-06:00</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>96</th>
+      <td>42473</td>
+      <td>agents</td>
+      <td>https://api.artic.edu/api/v1/agents/42473</td>
+      <td>Valentin Lefebvre</td>
+      <td>Lefebvre, Valentin</td>
+      <td>[Valentin Lefevre, Valentin LeFebre, Valentin ...</td>
+      <td>True</td>
+      <td>1641.0</td>
+      <td>1680.0</td>
+      <td>None</td>
+      <td>None</td>
+      <td>{'input': ['Valentin Lefebvre', 'Lefebvre, Val...</td>
+      <td>2025-01-13T09:14:56-06:00</td>
+      <td>2025-01-13T09:16:21-06:00</td>
+      <td>2025-02-18T10:13:14-06:00</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>97</th>
+      <td>41841</td>
+      <td>agents</td>
+      <td>https://api.artic.edu/api/v1/agents/41841</td>
+      <td>Carlo Innocenzo Carlone</td>
+      <td>Carlone, Carlo Innocenzo</td>
+      <td>[Carlo Carlone, Carlo Carlone, (Innocenz?), Ca...</td>
+      <td>True</td>
+      <td>1686.0</td>
+      <td>1775.0</td>
+      <td>None</td>
+      <td>None</td>
+      <td>{'input': ['Carlo Innocenzo Carlone', 'Carlone...</td>
+      <td>2025-01-13T09:14:56-06:00</td>
+      <td>2025-01-13T09:16:21-06:00</td>
+      <td>2025-02-18T10:13:14-06:00</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>98</th>
+      <td>30441</td>
+      <td>agents</td>
+      <td>https://api.artic.edu/api/v1/agents/30441</td>
+      <td>Marco Angolo del Moro</td>
+      <td>Angolo del Moro, Marco</td>
+      <td>[Marco Angelo del Moro, Marco del Moro, Marco ...</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>None</td>
+      <td>None</td>
+      <td>{'input': ['Marco Angolo del Moro', 'Angolo de...</td>
+      <td>2025-01-13T09:14:56-06:00</td>
+      <td>2025-01-13T09:16:21-06:00</td>
+      <td>2025-02-18T10:13:14-06:00</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>99</th>
+      <td>8516</td>
+      <td>agents</td>
+      <td>https://api.artic.edu/api/v1/agents/8516</td>
+      <td>Giovanni Battista Fontana</td>
+      <td>Fontana, Giovanni Battista</td>
+      <td>None</td>
+      <td>True</td>
+      <td>1524.0</td>
+      <td>1587.0</td>
+      <td>None</td>
+      <td>None</td>
+      <td>{'input': ['Giovanni Battista Fontana', 'Fonta...</td>
+      <td>2025-01-13T09:14:56-06:00</td>
+      <td>2025-01-13T09:16:21-06:00</td>
+      <td>2025-02-18T10:13:14-06:00</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>100 rows × 16 columns</p>
+</div></div></div>
 </div>
 </section>
 <section id="a-considerable-way-to-retrieve-multiple-pages-of-data">
@@ -538,6 +842,411 @@ document.write(`
 <li><p>Find the exhibits that has “Van Gogh” in the title.</p></li>
 <li><p>Search for a painting called “A Sunday on La Grande Jatte”.  Who is the artist?  When was it painted?</p></li>
 </ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">url_artwork</span> <span class="o">=</span> <span class="s1">&#39;https://api.artic.edu/api/v1/artworks&#39;</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url_artwork</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">url_exhibit</span> <span class="o">=</span> <span class="s1">&#39;https://api.artic.edu/api/v1/exhibitions/search?q=van gogh&#39;</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url_exhibit</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;limit&#39;</span><span class="p">:</span> <span class="mi">40</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_vangogh</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;data&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_vangogh</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>_score</th>
+      <th>id</th>
+      <th>api_model</th>
+      <th>api_link</th>
+      <th>title</th>
+      <th>timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>430.481200</td>
+      <td>3070</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/3070</td>
+      <td>Van Gogh</td>
+      <td>2025-02-17T23:38:33-06:00</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>409.763700</td>
+      <td>1865</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/1865</td>
+      <td>Van Gogh's Bedrooms</td>
+      <td>2025-02-17T23:35:01-06:00</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>409.057070</td>
+      <td>3672</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/3672</td>
+      <td>Vincent van Gogh</td>
+      <td>2025-02-05T17:25:07-06:00</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>390.981630</td>
+      <td>2518</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/2518</td>
+      <td>Van Gogh: In Search Of</td>
+      <td>2025-02-17T23:37:52-06:00</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>343.150940</td>
+      <td>3390</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/3390</td>
+      <td>Gallery of Art Interpretation: Van Gogh, Artist</td>
+      <td>2025-02-05T17:25:04-06:00</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>331.616820</td>
+      <td>2835</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/2835</td>
+      <td>Van Gogh and Gauguin: The Studio of the South</td>
+      <td>2025-02-17T23:37:47-06:00</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>330.616820</td>
+      <td>9639</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/9639</td>
+      <td>Van Gogh and the Avant-Garde: The Modern Lands...</td>
+      <td>2025-02-17T23:34:40-06:00</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>329.910160</td>
+      <td>7177</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/7177</td>
+      <td>Leonardo to Van Gogh: Master Drawings from Bud...</td>
+      <td>2025-02-05T17:25:48-06:00</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>295.761700</td>
+      <td>8423</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/8423</td>
+      <td>Meet the Artists: Van Gogh and Gauguin: A Self...</td>
+      <td>2025-02-05T17:26:05-06:00</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>294.761700</td>
+      <td>5874</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/5874</td>
+      <td>Masterpiece of the Month: The Bedroom at Arles...</td>
+      <td>2025-02-05T17:25:30-06:00</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>284.920650</td>
+      <td>3389</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/3389</td>
+      <td>Masterpiece of the Month: Garden of the House ...</td>
+      <td>2025-02-05T17:25:04-06:00</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>260.023830</td>
+      <td>5757</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/5757</td>
+      <td>Paintings and Drawings by Vincent van Gogh, le...</td>
+      <td>2025-02-05T17:25:29-06:00</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>252.419620</td>
+      <td>7780</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/7780</td>
+      <td>Junior Museum: Portraits and Sunflowers of Vin...</td>
+      <td>2025-02-05T17:25:54-06:00</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>245.254710</td>
+      <td>8424</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/8424</td>
+      <td>The Yellow House: Van Gogh and Gaugiun Side by...</td>
+      <td>2025-02-05T17:26:05-06:00</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>23.248981</td>
+      <td>5439</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/5439</td>
+      <td>Etchings by Van Dyck</td>
+      <td>2025-02-05T17:25:26-06:00</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>23.202024</td>
+      <td>5658</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/5658</td>
+      <td>The Howard Van Doren Shaw Memorial</td>
+      <td>2025-02-17T23:33:23-06:00</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>23.202024</td>
+      <td>5912</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/5912</td>
+      <td>Architecture by Mies van der Rohe</td>
+      <td>2025-02-17T23:33:14-06:00</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>22.332485</td>
+      <td>6027</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/6027</td>
+      <td>Mies van der Rohe Retrospective</td>
+      <td>2025-02-05T17:25:32-06:00</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>22.332485</td>
+      <td>74</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/74</td>
+      <td>The Iconography of Van Dyck</td>
+      <td>2025-02-05T17:24:31-06:00</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>22.202024</td>
+      <td>2281</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/2281</td>
+      <td>Van Dyck, Rembrandt, and the Portrait Print</td>
+      <td>2025-02-17T23:38:25-06:00</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>21.495365</td>
+      <td>3615</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/3615</td>
+      <td>Works by Jean Emile van Cauwelaert</td>
+      <td>2025-02-05T17:25:07-06:00</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>21.495365</td>
+      <td>3903</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/3903</td>
+      <td>Photographs by Edouard van der Elsken</td>
+      <td>2025-02-05T17:25:09-06:00</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>21.495365</td>
+      <td>6535</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/6535</td>
+      <td>Lucas van Leyden, Engravings and Woodcuts</td>
+      <td>2025-02-05T17:25:38-06:00</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>21.473270</td>
+      <td>5410</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/5410</td>
+      <td>Prints by Martin Schongauer, Lucas van Leyden,...</td>
+      <td>2025-02-05T17:25:25-06:00</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>20.727734</td>
+      <td>8242</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/8242</td>
+      <td>On the Road to Italy: Jan van Scorel</td>
+      <td>2025-02-05T17:26:02-06:00</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>19.368977</td>
+      <td>7095</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/7095</td>
+      <td>Society for Contemporary Art 39th Annual: Ger ...</td>
+      <td>2025-02-05T17:25:46-06:00</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>19.368977</td>
+      <td>8218</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/8218</td>
+      <td>Van Eyck's “Annunciation”: The meeting of Heav...</td>
+      <td>2025-02-05T17:26:01-06:00</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>18.764820</td>
+      <td>3449</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/3449</td>
+      <td>Water Colors, Sketches, Drawings and Etchings ...</td>
+      <td>2025-02-05T17:25:05-06:00</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>18.203678</td>
+      <td>7457</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/7457</td>
+      <td>The Unknown Mies van der Rohe and His Disciple...</td>
+      <td>2025-02-05T17:25:50-06:00</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>17.764820</td>
+      <td>4468</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/4468</td>
+      <td>Views in the Canadian Rockies Photographed by ...</td>
+      <td>2025-02-05T17:25:15-06:00</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>17.681107</td>
+      <td>3037</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/3037</td>
+      <td>Architecture, English and American 18th Centur...</td>
+      <td>2025-02-05T17:24:59-06:00</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>17.203678</td>
+      <td>5896</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/5896</td>
+      <td>Masterpiece of the Month: The Adoration of the...</td>
+      <td>2025-02-05T17:25:31-06:00</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>17.193268</td>
+      <td>8577</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/8577</td>
+      <td>Room of Chicago Art: Paintings by Jean Crawfor...</td>
+      <td>2025-02-05T17:26:07-06:00</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>16.681107</td>
+      <td>2924</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/2924</td>
+      <td>Small Loan Collection including Paintings by K...</td>
+      <td>2025-02-05T17:24:54-06:00</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>16.234737</td>
+      <td>3095</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/3095</td>
+      <td>To Build a Modern Campus: Ludwig Mies van der ...</td>
+      <td>2025-02-17T23:38:24-06:00</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>15.906640</td>
+      <td>6296</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/6296</td>
+      <td>The Masterpiece of the Month: Christ Preaching...</td>
+      <td>2025-02-05T17:25:35-06:00</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>14.833890</td>
+      <td>5593</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/5593</td>
+      <td>Paintings by Tressa Emerson Benson, Fred Biese...</td>
+      <td>2025-02-05T17:25:28-06:00</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>14.833890</td>
+      <td>2102</td>
+      <td>exhibitions</td>
+      <td>https://api.artic.edu/api/v1/exhibitions/2102</td>
+      <td>Paintings by Jean Crawford Adams, Emil Armin, ...</td>
+      <td>2025-02-05T17:24:46-06:00</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
 </section>
 <section id="possible-available-apis-with-without-authorizations">
 <h2>Possible available APIs with/without authorizations<a class="headerlink" href="#possible-available-apis-with-without-authorizations" title="Link to this heading">#</a></h2>
@@ -598,34 +1307,396 @@ document.write(`
 <p>Example API: <a class="reference external" href="https://developer.nytimes.com/docs/articlesearch-product/1/routes/articlesearch.json/get">https://developer.nytimes.com/docs/articlesearch-product/1/routes/articlesearch.json/get</a></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;q&#39;</span><span class="p">:</span><span class="s1">&#39;carlos alvarez&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;begin_date&#39;</span><span class="p">:</span> <span class="s1">&#39;20140101&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;facet&#39;</span><span class="p">:</span> <span class="s1">&#39;true&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;facet_fields&#39;</span><span class="p">:</span> <span class="s1">&#39;pub_year&#39;</span><span class="p">})</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="n">results_store</span> <span class="o">=</span> <span class="p">[]</span> 
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">ok</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="n">results_store</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">][</span><span class="s1">&#39;docs&#39;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;something went wrong!&#39;</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;response&#39;</span><span class="p">][</span><span class="s1">&#39;facets&#39;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">results_store</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;pub_year&#39;: {&#39;terms&#39;: [{&#39;term&#39;: &#39;2023&#39;, &#39;count&#39;: 36},
-   {&#39;term&#39;: &#39;2024&#39;, &#39;count&#39;: 32},
-   {&#39;term&#39;: &#39;2019&#39;, &#39;count&#39;: 25},
-   {&#39;term&#39;: &#39;2014&#39;, &#39;count&#39;: 24},
-   {&#39;term&#39;: &#39;2016&#39;, &#39;count&#39;: 24},
-   {&#39;term&#39;: &#39;2015&#39;, &#39;count&#39;: 23},
-   {&#39;term&#39;: &#39;2022&#39;, &#39;count&#39;: 21},
-   {&#39;term&#39;: &#39;2021&#39;, &#39;count&#39;: 20},
-   {&#39;term&#39;: &#39;2017&#39;, &#39;count&#39;: 16},
-   {&#39;term&#39;: &#39;2020&#39;, &#39;count&#39;: 16}]}}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10
 </pre></div>
 </div>
 </div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;q&#39;</span><span class="p">:</span><span class="s1">&#39;microsoft&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;begin_date&#39;</span><span class="p">:</span> <span class="s1">&#39;20240101&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="s1">&#39;20241231&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;sort&#39;</span><span class="p">:</span> <span class="s1">&#39;oldest&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">][</span><span class="s1">&#39;docs&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;pub_date&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;2024-01-02T20:43:17+0000&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">][</span><span class="s1">&#39;docs&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;abstract&#39;: &#39;Leonard Bernstein is coming back to New York City Center as part of a celebration of what would have been his 90th birthday.&#39;,
+ &#39;web_url&#39;: &#39;https://www.nytimes.com/2008/05/12/theater/12arts-ENCORESFORBE_BRF.html&#39;,
+ &#39;snippet&#39;: &#39;Leonard Bernstein is coming back to New York City Center as part of a celebration of what would have been his 90th birthday.&#39;,
+ &#39;lead_paragraph&#39;: &#39;Leonard Bernstein is coming back to New York City Center as part of a celebration of what would have been his 90th birthday. For the first time, the City Center Encores! series will begin in the fall, with “On the Town,” the 1944 musical that Bernstein wrote with Betty Comden and Adolph Green. “On the Town” is scheduled to run from Nov. 19 to 23, followed by a production of the 1932 Jerome Kern-Oscar Hammerstein musical “Music in the Air” from Feb. 5 to 8. The season will conclude with “Finian’s Rainbow,” the 1949 musical by Burton Lane, E. Y. Harburg and Fred Saidy about what to do with an Irish pot of gold in the state of Missitucky. That is scheduled to run March 26 to 29.&#39;,
+ &#39;print_section&#39;: &#39;E&#39;,
+ &#39;print_page&#39;: &#39;2&#39;,
+ &#39;source&#39;: &#39;The New York Times&#39;,
+ &#39;multimedia&#39;: [],
+ &#39;headline&#39;: {&#39;main&#39;: &#39;Encores! for Bernstein&#39;,
+  &#39;kicker&#39;: &#39;Arts, Briefly&#39;,
+  &#39;content_kicker&#39;: None,
+  &#39;print_headline&#39;: &#39;Encores! For Bernstein&#39;,
+  &#39;name&#39;: None,
+  &#39;seo&#39;: None,
+  &#39;sub&#39;: None},
+ &#39;keywords&#39;: [{&#39;name&#39;: &#39;subject&#39;,
+   &#39;value&#39;: &#39;Encores! Great American Musicals in Concert (Series)&#39;,
+   &#39;rank&#39;: 1,
+   &#39;major&#39;: &#39;N&#39;},
+  {&#39;name&#39;: &#39;subject&#39;, &#39;value&#39;: &#39;Theater&#39;, &#39;rank&#39;: 2, &#39;major&#39;: &#39;N&#39;},
+  {&#39;name&#39;: &#39;persons&#39;, &#39;value&#39;: &#39;Bernstein, Leonard&#39;, &#39;rank&#39;: 3, &#39;major&#39;: &#39;N&#39;}],
+ &#39;pub_date&#39;: &#39;2008-05-12T04:00:00+0000&#39;,
+ &#39;document_type&#39;: &#39;article&#39;,
+ &#39;news_desk&#39;: &#39;Culture&#39;,
+ &#39;section_name&#39;: &#39;Theater&#39;,
+ &#39;byline&#39;: {&#39;original&#39;: &#39;By Campbell Robertson&#39;,
+  &#39;person&#39;: [{&#39;firstname&#39;: &#39;Campbell&#39;,
+    &#39;middlename&#39;: None,
+    &#39;lastname&#39;: &#39;Robertson&#39;,
+    &#39;qualifier&#39;: None,
+    &#39;title&#39;: None,
+    &#39;role&#39;: &#39;reported&#39;,
+    &#39;organization&#39;: &#39;&#39;,
+    &#39;rank&#39;: 1}],
+  &#39;organization&#39;: None},
+ &#39;type_of_material&#39;: &#39;Brief&#39;,
+ &#39;_id&#39;: &#39;nyt://article/cff39034-1dd5-57f0-bfb6-5ca21ac5cbe7&#39;,
+ &#39;word_count&#39;: 131,
+ &#39;uri&#39;: &#39;nyt://article/cff39034-1dd5-57f0-bfb6-5ca21ac5cbe7&#39;}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">][</span><span class="s1">&#39;docs&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>abstract</th>
+      <th>web_url</th>
+      <th>snippet</th>
+      <th>lead_paragraph</th>
+      <th>source</th>
+      <th>multimedia</th>
+      <th>headline</th>
+      <th>keywords</th>
+      <th>pub_date</th>
+      <th>document_type</th>
+      <th>news_desk</th>
+      <th>section_name</th>
+      <th>byline</th>
+      <th>type_of_material</th>
+      <th>_id</th>
+      <th>word_count</th>
+      <th>uri</th>
+      <th>print_section</th>
+      <th>print_page</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>And a winter storm could dump up to a foot of ...</td>
+      <td>https://www.nytimes.com/2025/02/18/weather/arc...</td>
+      <td>And a winter storm could dump up to a foot of ...</td>
+      <td>A powerful surge of arctic air from Canada des...</td>
+      <td>The New York Times</td>
+      <td>[{'rank': 0, 'subtype': 'square320', 'caption'...</td>
+      <td>{'main': 'Arctic Air Mass Brings Dangerous Tem...</td>
+      <td>[{'name': 'subject', 'value': 'Weather', 'rank...</td>
+      <td>2025-02-18T14:48:32+0000</td>
+      <td>article</td>
+      <td>Weather</td>
+      <td>Weather</td>
+      <td>{'original': 'By Nazaneen Ghaffar', 'person': ...</td>
+      <td>News</td>
+      <td>nyt://article/3f7121fc-64f3-577b-9b05-edff9459...</td>
+      <td>993</td>
+      <td>nyt://article/3f7121fc-64f3-577b-9b05-edff9459...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Widespread ice accumulations may lead to hazar...</td>
+      <td>https://www.nytimes.com/2025/02/05/weather/ice...</td>
+      <td>Widespread ice accumulations may lead to hazar...</td>
+      <td>Waves of winter weather are expected to sweep ...</td>
+      <td>The New York Times</td>
+      <td>[{'rank': 0, 'subtype': 'xlarge', 'caption': N...</td>
+      <td>{'main': 'Freezing Rain and Messy Travel Expec...</td>
+      <td>[{'name': 'subject', 'value': 'Weather', 'rank...</td>
+      <td>2025-02-05T09:00:03+0000</td>
+      <td>article</td>
+      <td>Weather</td>
+      <td>Weather</td>
+      <td>{'original': 'By Nazaneen Ghaffar and Judson J...</td>
+      <td>News</td>
+      <td>nyt://article/5cee321e-3b73-5b57-aee5-585928ee...</td>
+      <td>534</td>
+      <td>nyt://article/5cee321e-3b73-5b57-aee5-585928ee...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Their feathers, roosting behaviors and adaptab...</td>
+      <td>https://www.nytimes.com/2025/01/29/realestate/...</td>
+      <td>Their feathers, roosting behaviors and adaptab...</td>
+      <td>Winter mornings begin at David Sibley’s Deerfi...</td>
+      <td>The New York Times</td>
+      <td>[{'rank': 0, 'subtype': 'xlarge', 'caption': N...</td>
+      <td>{'main': 'The Birds’ Guide to Surviving Winter...</td>
+      <td>[{'name': 'subject', 'value': 'Birds', 'rank':...</td>
+      <td>2025-01-29T10:00:23+0000</td>
+      <td>article</td>
+      <td>RealEstate</td>
+      <td>Real Estate</td>
+      <td>{'original': 'By Margaret Roach', 'person': [{...</td>
+      <td>News</td>
+      <td>nyt://article/e28cb759-1673-58d8-9c55-4568539f...</td>
+      <td>1466</td>
+      <td>nyt://article/e28cb759-1673-58d8-9c55-4568539f...</td>
+      <td>RE</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>The 17-member crew of the freighter, stuck a m...</td>
+      <td>https://www.nytimes.com/2025/01/25/nyregion/ca...</td>
+      <td>The 17-member crew of the freighter, stuck a m...</td>
+      <td>A Canadian cargo freighter carrying 17 crew me...</td>
+      <td>The New York Times</td>
+      <td>[{'rank': 0, 'subtype': 'xlarge', 'caption': N...</td>
+      <td>{'main': 'After 3 Days Trapped in Lake Erie Ic...</td>
+      <td>[{'name': 'glocations', 'value': 'Lake Erie', ...</td>
+      <td>2025-01-25T21:35:10+0000</td>
+      <td>article</td>
+      <td>Metro</td>
+      <td>New York</td>
+      <td>{'original': 'By David Andreatta', 'person': [...</td>
+      <td>News</td>
+      <td>nyt://article/8c8f3d31-ab16-59d7-899c-5a9ce713...</td>
+      <td>756</td>
+      <td>nyt://article/8c8f3d31-ab16-59d7-899c-5a9ce713...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>A mass of air called the polar vortex has esca...</td>
+      <td>https://www.nytimes.com/2025/01/21/climate/why...</td>
+      <td>A mass of air called the polar vortex has esca...</td>
+      <td>The unusual gust of frigid air extending down ...</td>
+      <td>The New York Times</td>
+      <td>[]</td>
+      <td>{'main': 'Why Is It So Cold in the South If th...</td>
+      <td>[{'name': 'subject', 'value': 'Global Warming'...</td>
+      <td>2025-01-21T20:36:07+0000</td>
+      <td>article</td>
+      <td>Climate</td>
+      <td>Climate</td>
+      <td>{'original': 'By Austyn Gaffney', 'person': [{...</td>
+      <td>News</td>
+      <td>nyt://article/68605806-3676-574a-9858-49ef7db6...</td>
+      <td>477</td>
+      <td>nyt://article/68605806-3676-574a-9858-49ef7db6...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Although the last remaining precipitation was ...</td>
+      <td>https://www.nytimes.com/2025/01/22/weather/sou...</td>
+      <td>Although the last remaining precipitation was ...</td>
+      <td>On Wednesday, a long stretch of the deep south...</td>
+      <td>The New York Times</td>
+      <td>[]</td>
+      <td>{'main': 'When Will the South Warm Up Again? N...</td>
+      <td>[{'name': 'subject', 'value': 'Weather', 'rank...</td>
+      <td>2025-01-22T18:03:32+0000</td>
+      <td>article</td>
+      <td>Weather</td>
+      <td>Weather</td>
+      <td>{'original': 'By Judson Jones', 'person': [{'f...</td>
+      <td>News</td>
+      <td>nyt://article/1eadb55b-5c5b-50b5-86c1-bca28b07...</td>
+      <td>270</td>
+      <td>nyt://article/1eadb55b-5c5b-50b5-86c1-bca28b07...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Officials warned residents across the South th...</td>
+      <td>https://www.nytimes.com/2025/01/23/us/snow-col...</td>
+      <td>Officials warned residents across the South th...</td>
+      <td>After a rare winter storm walloped the souther...</td>
+      <td>The New York Times</td>
+      <td>[{'rank': 0, 'subtype': 'xlarge', 'caption': N...</td>
+      <td>{'main': 'After Snow and Frigid Temperatures, ...</td>
+      <td>[{'name': 'glocations', 'value': 'Southern Sta...</td>
+      <td>2025-01-23T10:02:15+0000</td>
+      <td>article</td>
+      <td>National</td>
+      <td>U.S.</td>
+      <td>{'original': 'By Eduardo Medina', 'person': [{...</td>
+      <td>News</td>
+      <td>nyt://article/d1bb9b9c-ea8c-51c2-b90f-47f12e61...</td>
+      <td>800</td>
+      <td>nyt://article/d1bb9b9c-ea8c-51c2-b90f-47f12e61...</td>
+      <td>A</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>The figures are unofficial because National We...</td>
+      <td>https://www.nytimes.com/2025/01/22/weather/win...</td>
+      <td>The figures are unofficial because National We...</td>
+      <td>Amid an extraordinary storm that delivered a b...</td>
+      <td>The New York Times</td>
+      <td>[{'rank': 0, 'subtype': 'xlarge', 'caption': N...</td>
+      <td>{'main': 'Here’s Where It Snowed the Most Acro...</td>
+      <td>[{'name': 'subject', 'value': 'Snow and Snowst...</td>
+      <td>2025-01-22T22:07:45+0000</td>
+      <td>article</td>
+      <td>Weather</td>
+      <td>Weather</td>
+      <td>{'original': 'By Amy Graff', 'person': [{'firs...</td>
+      <td>News</td>
+      <td>nyt://article/ac7f1014-864e-5f87-aa4a-2cc3ede4...</td>
+      <td>476</td>
+      <td>nyt://article/ac7f1014-864e-5f87-aa4a-2cc3ede4...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Snow and cold temperatures hitting a broad swa...</td>
+      <td>https://www.nytimes.com/2025/01/21/weather/fli...</td>
+      <td>Snow and cold temperatures hitting a broad swa...</td>
+      <td>With winter weather striking the Southeastern ...</td>
+      <td>The New York Times</td>
+      <td>[{'rank': 0, 'subtype': 'xlarge', 'caption': N...</td>
+      <td>{'main': 'Thousands of Flights Delayed or Canc...</td>
+      <td>[{'name': 'subject', 'value': 'Delays (Transpo...</td>
+      <td>2025-01-21T20:32:56+0000</td>
+      <td>article</td>
+      <td>National</td>
+      <td>Weather</td>
+      <td>{'original': 'By Christine Chung', 'person': [...</td>
+      <td>News</td>
+      <td>nyt://article/76d480d7-59ba-5fde-94ca-283cde44...</td>
+      <td>513</td>
+      <td>nyt://article/76d480d7-59ba-5fde-94ca-283cde44...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Many roadways were impassable, classes were ca...</td>
+      <td>https://www.nytimes.com/2025/01/21/weather/new...</td>
+      <td>Many roadways were impassable, classes were ca...</td>
+      <td>Weather upending routines and causing havoc is...</td>
+      <td>The New York Times</td>
+      <td>[{'rank': 0, 'subtype': 'xlarge', 'caption': N...</td>
+      <td>{'main': 'New Orleans, a City That Has Seen It...</td>
+      <td>[{'name': 'subject', 'value': 'Snow and Snowst...</td>
+      <td>2025-01-21T19:37:18+0000</td>
+      <td>article</td>
+      <td>National</td>
+      <td>Weather</td>
+      <td>{'original': 'By Katy Reckdahl and Rick Rojas'...</td>
+      <td>News</td>
+      <td>nyt://article/733ed940-201e-5e84-ae2d-55445602...</td>
+      <td>536</td>
+      <td>nyt://article/733ed940-201e-5e84-ae2d-55445602...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 </section>
 <section id="how-many-articles-matched-the-search">
@@ -703,11 +1774,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="../a0-project-specification.html"
+       href="09-web-scraping.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Project Specification</p>
+        <p class="prev-next-title">Web-scraping with <code class="docutils literal notranslate"><span class="pre">BeautifulSoup4</span></code></p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
